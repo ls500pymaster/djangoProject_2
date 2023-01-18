@@ -4,7 +4,6 @@ python:
 install:
   - pip install -r requirements.txt
 before_script:
-  - .env
   - python manage.py migrate
 script:
   - flake8 .
