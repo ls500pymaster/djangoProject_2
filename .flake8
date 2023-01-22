@@ -100,6 +100,7 @@ ignore =
     W503,
     E501,
     F401,
+    W191,
 # Specify the list of error codes you wish Flake8 to report.
 select =
     E,
