@@ -22,3 +22,5 @@ class Command(BaseCommand):
                         is_active=True,
                     )
                 ])
+        else:
+            self.stdout.write(u'Number of users must be 0-10')
