@@ -10,7 +10,10 @@ class Command(BaseCommand):
 
 	def handle(self, *args, **kwargs):
 		users_ids = kwargs['user_id']
-		for user_id in users_ids:
-			user = User.objects.get(pk=user_id, is_superuser=False)
-			user.delete()
-			self.stdout.write(u'User"%s (%s)" deleted!' % (user.username, user_id))
+		try:
+			for user_id in users_ids:
+				user = User.objects.get(pk=user_id, is_superuser=False)
+				user.delete()
+				self.stdout.write(u'User"%s (%s)" deleted!' % (user.username, user_id))
+		except User.DoesNotExist:
+			self.stdout.write(u'You cant delete superuser!')
