@@ -8,19 +8,12 @@ class Command(BaseCommand):
     help = u'Create random user'
 
     def add_arguments(self, parser):
-        parser.add_argument('total', type=int, help=u'Number of users')
+        parser.add_argument('total', type=int, choices=range(1, 11), help=u'Number of users')
 
     def handle(self, *args, **kwargs):
-        total = kwargs['total']
-        if 0 < total <= 10:
-            for i in range(total):
-                User.objects.bulk_create([
-                    User(
-                        username=get_random_string(6),
-                        email="",
-                        password=make_password(password="112233"),
-                        is_active=True,
-                    )
-                ])
-        else:
-            self.stdout.write(u'Number of users must be 0-10')
+        number_of_users = kwargs['total']
+        try:
+            User.objects.bulk_create([User(username=get_random_string(6), email="", password=make_password(password="112233")
+                                               , is_superuser=False, is_active=True) for _ in range(number_of_users)])
+        finally:
+            self.stdout.write(f"Succesfully added {number_of_users} users.")
