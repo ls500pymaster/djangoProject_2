@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
-from django.utils.crypto import get_random_string
 from django.contrib.auth.hashers import make_password
+from faker import Faker
+
+fake = Faker()
 
 
 class Command(BaseCommand):
@@ -13,7 +15,12 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         number_of_users = kwargs['total']
         try:
-            User.objects.bulk_create([User(username=get_random_string(6), email="", password=make_password(password="112233")
-                                               , is_superuser=False, is_active=True) for _ in range(number_of_users)])
+            User.objects.bulk_create
+            ([User(
+                username=fake.user_name(),
+                email=fake.email(),
+                password=make_password(password=fake.password(length=8)))
+                for _ in range(number_of_users)]
+            )
         finally:
-            self.stdout.write(f"Succesfully added {number_of_users} users.")
+            self.stdout.write(f"Successfully added {number_of_users} users.")
