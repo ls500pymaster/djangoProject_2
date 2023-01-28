@@ -9,10 +9,11 @@ class Command(BaseCommand):
 		parser.add_argument('user_id', nargs='+', type=int, help='Users ID')
 
 # Builtin lookup https://docs.djangoproject.com/en/4.1/ref/models/lookups/
+# If all you want to do is determine if at least one result exists. Use exists().
 
 	def handle(self, *args, **kwargs):
 		users_ids = kwargs['user_id']
-		if User.objects.filter(id__in=users_ids, is_superuser=True):
+		if User.objects.filter(id__in=users_ids, is_superuser=True).exists():
 			self.stdout.write(f"Can't delete superusers {users_ids}.")
 		else:
-			User.objects.filter(id__in=users_ids, is_superuser=False).delete()
+			User.objects.filter(id__in=users_ids).delete()
