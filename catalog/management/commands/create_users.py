@@ -20,7 +20,6 @@ class Command(BaseCommand):
                 username=fake.user_name(),
                 email=fake.email(),
                 password=make_password(password=fake.password(length=8)))
-                for _ in range(number_of_users)]
-            )
+                for _ in range(number_of_users)])
         finally:
             self.stdout.write(f"Successfully added {number_of_users} users.")
