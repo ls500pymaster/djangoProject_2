@@ -14,12 +14,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         number_of_users = kwargs['total']
-        try:
-            User.objects.bulk_create
-            ([User(
-                username=fake.user_name(),
-                email=fake.email(),
-                password=make_password(password=fake.password(length=8)))
-                for _ in range(number_of_users)])
-        finally:
-            self.stdout.write(f"Successfully added {number_of_users} users.")
+        User.objects.bulk_create(
+            [
+                User(
+                    username=fake.user_name(), email=fake.email(), password=make_password(password=fake.password(length=8))
+                ) for _ in range(number_of_users)
+            ]
+        )
+        self.stdout.write(f"Successfully added {number_of_users} users.")
