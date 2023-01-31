@@ -1,6 +1,10 @@
-## CUSTOM COMMANDS
+## Overview
 
-### Create fake user python
+![](https://github.com/ls500pymaster/djangoProject_2/blob/master/catalog.png?raw=true)
+
+## Custom commands
+
+### Create fake user
 
 `python manage.py create_users 5 
 `
@@ -12,7 +16,8 @@
 
 fixtures.json
 
-![](https://github.com/ls500pymaster/djangoProject_2/blob/master/catalog.png?raw=true)
+`python manage.py dumpdata --all --indent 2 -o fixtures.json
+`
 
 #### ### Graph_models
 
