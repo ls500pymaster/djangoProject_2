@@ -1,0 +1,15 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+    <div class="post">
+        {% if book.publication_date %}
+            <div class="date">
+                {{ book.publication_date }}
+            </div>
+        {% endif %}
+        <a class="btn btn-default" href="{% url 'book_edit' pk=book.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+        <h1>{{ book.title }}</h1>
+        <p>{{ book.authors.get|linebreaksbr }}</p>
+        <p>{{ book.description|linebreaksbr }}</p>
+    </div>
+{% endblock %}
