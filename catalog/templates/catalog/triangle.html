@@ -1,12 +1,10 @@
 {% extends 'catalog/base.html' %}
 
+{% load crispy_forms_tags %}
 {% block content %}
-    <h1>Form</h1>
-<form method="POST">
-        {% csrf_token %}
-    <table>
-        {{ form }}
-    </table>
-    <input type="submit" value="Send" >
-</form>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-success">Send</button>
+  </form>
 {% endblock %}

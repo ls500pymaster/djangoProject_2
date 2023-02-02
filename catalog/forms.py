@@ -10,5 +10,5 @@ class BookForm(forms.ModelForm):
 
 
 class TriangleForm(forms.Form):
-    cat_a = forms.IntegerField()
-    cat_b = forms.IntegerField()
+    cat_a = forms.IntegerField(min_value=1)
+    cat_b = forms.IntegerField(min_value=1)

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 	'debug_toolbar',
 	'django_extensions',
 	'django_print_settings',
+	'crispy_forms',
 ]
 
 MIDDLEWARE = [
