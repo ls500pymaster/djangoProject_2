@@ -1,0 +1,26 @@
+{% load static %}
+<html lang="">
+    <head>
+        <title>Django Catalog</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+        <link href='//fonts.googleapis.com/css2?family=Aboreto&display=swap' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="{% static 'css/catalog.css' %}">
+    </head>
+<body>
+    <div class="page-header">
+        <a href="{% url 'book_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+        <h1><a href="/">Django Catalog</a></h1>
+    </div>
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+            {% block content %}
+            {% endblock %}
+            <input type=button class="btn btn-primary btn-lg" value="Previous Page" onClick="javascript:history.go(-1);">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

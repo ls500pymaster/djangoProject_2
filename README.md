@@ -34,3 +34,34 @@ nclude only some specific models
 OR exclude certain models 
 `python manage.py graph_models -a X Foo,Bar -o no_foo_bar.png`
 
+>>> from django.contrib.auth.models import User
+
+# Create a regular user 'foo'
+>>> user = User.objects.create_user('foo', 'foo.bar@xxx.com', 'bar')
+
+# List all users
+>>> User.objects.all()
+[<User: admin>, <User: abegail>, <User: foo>]
+
+>>> User.objects.all()[1].is_superuser
+True
+
+>>> User.objects.all()[2].is_superuser
+False
+
+# Drop a user from the db
+>>> User.objects.all()[2].delete()
+
+>>> User.objects.all()
+[<User: admin>, <User: abegail>]
+
+# Create a superuser
+>>> user = User.objects.create_superuser('burr', 'burr@buzz.com', 'buzz')
+
+>>> User.objects.all()
+[<User: admin>, <User: abegail>, <User: burr>]
+
+>>> User.objects.all()[2].delete()
+
+>>> User.objects.all()
+[<User: admin>, <User: abegail>]

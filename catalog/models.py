@@ -38,6 +38,7 @@ class Publisher(models.Model):
 
 class Book(models.Model):
     title = models.CharField(max_length=100, unique=True)
+    description = models.TextField(verbose_name="About book", blank=True)
     authors = models.ManyToManyField(Author)
     genre = models.ManyToManyField(Genre)
     publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)
