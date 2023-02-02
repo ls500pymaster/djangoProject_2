@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 	'django_extensions',
 	'django_print_settings',
 	'crispy_forms',
+	'django_bootstrap_icons',
 ]
 
 MIDDLEWARE = [
