@@ -25,3 +25,8 @@ class TriangleForm(forms.Form):
     class Meta:
         model = forms.Form
         fields = ['cat_a', 'cat_b']
+
+
+# class TriangleForm(forms.Form):
+#     cat_a = forms.IntegerField(min_value=1)
+#     cat_b = forms.IntegerField(min_value=1)
