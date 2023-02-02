@@ -1,12 +1,12 @@
 {% extends 'catalog/base.html' %}
+
 {% block content %}
     {% for book in books %}
         <div class="post">
             <div class="date">
                 {{ book.publication_date }}
             </div>
-
-            <h1><a href="{% url 'book_detail' pk=book.pk %}">{{ book.title| }}</a></h1>
+            <h1><a href="{% url 'book_detail' pk=book.pk %}">{{ book.title}}</a></h1>
             <p>{{ book.authors.get|linebreaksbr }}</p>
         </div>
     {% endfor %}

@@ -1,9 +1,27 @@
 from django.shortcuts import redirect
-from .models import Book
+from .models import Book, Author
 from django.shortcuts import render, get_object_or_404
-from .forms import BookForm, TriangleForm
+from .forms import BookForm, TriangleForm, AuthorForm
 from django.utils import timezone
 import math
+
+
+def author_detail(request, pk):
+    author_detail = get_object_or_404(Author, pk=pk)
+    return render(request, 'catalog/author_detail.html', {'author': author_detail})
+
+
+def author_edit(request, pk):
+    author = get_object_or_404(Author, pk=pk)
+    if request.method == "POST":
+        form = AuthorForm(request.POST, instance=author)
+        if form.is_valid():
+            author = form.save(commit=False)
+            author.save()
+            return redirect('author_detail', pk=author.pk)
+    else:
+        form = AuthorForm(instance=author)
+    return render(request, 'catalog/author_edit.html', {'form': form})
 
 
 def catalog(request):
@@ -20,11 +38,11 @@ def book_new(request):
     if request.method == "POST":
         form = BookForm(request.POST)
         if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.publication_date = timezone.now()
-            post.save()
-            return redirect('book_detail', pk=post.pk)
+            book = form.save(commit=False)
+            book.author = request.user
+            book.publication_date = timezone.now()
+            book.save()
+            return redirect('book_detail', pk=book.pk)
     else:
         form = BookForm()
     return render(request, 'catalog/book_new.html', {'form': form})
@@ -35,11 +53,11 @@ def book_edit(request, pk):
     if request.method == "POST":
         form = BookForm(request.POST, instance=book)
         if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.published_date = timezone.now()
-            post.save()
-            return redirect('book_detail', pk=post.pk)
+            book = form.save(commit=False)
+            book.author = request.user
+            book.published_date = timezone.now()
+            book.save()
+            return redirect('book_detail', pk=book.pk)
     else:
         form = BookForm(instance=book)
     return render(request, 'catalog/book_edit.html', {'form': form})
@@ -54,3 +72,7 @@ def triangle(request):
     else:
         triangle_form = TriangleForm()
         return render(request, "catalog/triangle.html", {"form": triangle_form})
+
+
+def error_404(request, exception):
+    return render(request, 'catalog/404.html')

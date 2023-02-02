@@ -1,5 +1,5 @@
 {% extends 'catalog/base.html' %}
-
+{% load bootstrap_icons %}
 {% block content %}
     <div class="post">
         {% if book.publication_date %}
@@ -7,7 +7,7 @@
                 {{ book.publication_date }}
             </div>
         {% endif %}
-        <a class="btn btn-default" href="{% url 'book_detail' pk=book.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+        <a class="btn btn-default" href="{% url 'book_edit' pk=book.pk %}"><i class="bi bi-pencil-fill"></i></a>
         <h1>{{ book.title }}</h1>
         <p>{{ book.authors.get|linebreaksbr }}</p>
         <p>{{ book.description|linebreaksbr }}</p>

@@ -19,6 +19,23 @@ fixtures.json
 `python manage.py dumpdata --all --indent 2 -o fixtures.json
 `
 
+### Runserver
+` python manage.py runserver --insecure
+`
+Debug mode False, because I need to load statics for custom 404 error page
+
+
+### Django model forms
+` http://127.0.0.1:8000/catalog/author/2/
+` Author, Edited
+
+` http://127.0.0.1:8000/catalog/book/new/
+` Add new book
+
+` http://127.0.0.1:8000/catalog/
+` All books
+
+
 #### ### Graph_models
 
 To group all the application and output into PNG file

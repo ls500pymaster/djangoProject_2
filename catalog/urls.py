@@ -8,4 +8,8 @@ urlpatterns = [
     path('book/<int:pk>/edit/', views.book_edit, name='book_edit'),
     path("triangle/", views.triangle),
     path("triangle/result/", views.triangle, name='triangle_result'),
+    path('author/<int:pk>/', views.author_detail, name='author_detail'),
+    path('author/<int:pk>/edit', views.author_edit, name='author_edit'),
 ]
+
+
