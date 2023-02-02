@@ -2,6 +2,15 @@
 
 {% block content %}
     <div class="post">
-        <h1>Result: {{ result}}</h1>
+    {% if result %}
+        <div class="mt-3" style="width: auto;">
+    <div class="alert alert-success" role="alert">
+  <h4 class="alert-heading">Well done!</h4>
+  <p>Result: {{ result }}</p>
+  <hr>
+  <p class="mb-0">The formula of the Pythagorean Theorem looks like this: a2 + b2 = c2</p>
+</div>
+    {% endif %}
+    </div>
     </div>
 {% endblock %}
