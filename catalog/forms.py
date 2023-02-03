@@ -1,7 +1,5 @@
 from django import forms
 from .models import Book, Author
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
 
 
 class BookForm(forms.ModelForm):
@@ -25,8 +23,4 @@ class TriangleForm(forms.Form):
     class Meta:
         model = forms.Form
         fields = ['cat_a', 'cat_b']
-
-
-# class TriangleForm(forms.Form):
-#     cat_a = forms.IntegerField(min_value=1)
-#     cat_b = forms.IntegerField(min_value=1)
+        
