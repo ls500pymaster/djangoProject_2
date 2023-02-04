@@ -64,14 +64,10 @@ def book_edit(request, pk):
 
 
 def triangle(request):
-    if request.method == "POST":
-        cat_a = request.POST.get("cat_a")
-        cat_b = request.POST.get("cat_b")
-        result = math.sqrt((int(cat_a) ** 2) + (int(cat_b) ** 2))
-        return render(request, "catalog/triangle_result.html", {"result": result})
-    else:
-        triangle_form = TriangleForm()
-        return render(request, "catalog/triangle.html", {"form": triangle_form})
+    form = TriangleForm(request.GET)
+    if form.is_valid():
+        form.result = math.hypot(form.cleaned_data['cat_a'], form.cleaned_data['cat_b'])
+    return render(request, 'catalog/triangle.html', {'form': form})
 
 
 def error_404(request, exception):
