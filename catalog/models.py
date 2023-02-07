@@ -13,7 +13,7 @@ class Author(models.Model):
     email = models.EmailField(verbose_name="Author email", null=True)
 
     def __str__(self):
-        return self.first_name
+        return f"{self.first_name}, {self.last_name}"
 
 
 class AuthorProfile(models.Model):
@@ -27,6 +27,9 @@ class AuthorProfile(models.Model):
 class Genre(models.Model):
     genre_name = models.CharField(max_length=30, unique=True)
 
+    def __str__(self):
+        return self.genre_name
+
 
 class Publisher(models.Model):
     name = models.CharField(max_length=30)
@@ -36,6 +39,9 @@ class Publisher(models.Model):
     country = models.CharField(max_length=50)
     website = models.URLField(unique=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Book(models.Model):
     title = models.CharField(max_length=100, unique=True)
@@ -44,6 +50,24 @@ class Book(models.Model):
     genre = models.ManyToManyField(Genre)
     publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)
     publication_date = models.DateField(verbose_name="Date the book was published")
+    status = models.CharField(
+        max_length=1,
+        default='d',
+        choices=[('d', 'Draft'), ('p', 'Published'), ('w', 'Withdrawn'), ])
 
     def __str__(self):
         return self.title
+
+
+class RequestLog(models.Model):
+    path = models.CharField(max_length=255)
+    method = models.CharField(max_length=5)
+    timestamp = models.DateField(auto_now_add=True)
+    exec_time = models.IntegerField(null=True)
+    full_response = models.CharField(max_length=255)
+    status_code = models.IntegerField(null=True)
+    ip_address = models.GenericIPAddressField(verbose_name="IP address from request", null=True)
+
+    def __str__(self):
+        return f"{self.path}"
+

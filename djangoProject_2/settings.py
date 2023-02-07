@@ -53,8 +53,6 @@ MIDDLEWARE = [
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-	'catalog.middlewares.SimpleMiddleware',
 ]
 
 ROOT_URLCONF = 'djangoProject_2.urls'
@@ -138,3 +136,4 @@ INTERNAL_IPS = [
 SHELL_PLUS = "ipython"
 SHELL_PLUS_PRINT_SQL = True
 SHELL_PLUS_PRINT_SQL_TRUNCATE = None
+
