@@ -4,7 +4,6 @@ from django.utils.translation import ngettext
 from django.contrib import messages
 from django.core import serializers
 from django.http import HttpResponse
-from django.utils.html import format_html
 
 
 @admin.register(Author)
@@ -57,13 +56,4 @@ class LogAdmin(admin.ModelAdmin):
     def export_as_json(self, request, queryset):
         response = HttpResponse(content_type="application/json")
         serializers.serialize("json", queryset, stream=response, indent=2)
-        return response
-
-# all_models = apps.get_models()
-#
-#
-# for model in all_models:
-#     try:
-#         admin.site.register(model)
-#     except admin.sites.AlreadyRegistered:
-#         pass
+        return
