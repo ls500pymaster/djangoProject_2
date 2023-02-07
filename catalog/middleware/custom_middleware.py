@@ -21,5 +21,6 @@ class RequestLogMiddleware:
 			                 status_code=response.status_code,
 			                 ip_address=request.META.get("REMOTE_ADDR"))
 			log.save()
-
+		else:
+			pass
 		return response
