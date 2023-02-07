@@ -66,6 +66,8 @@ class RequestLog(models.Model):
     exec_time = models.IntegerField(null=True)
     full_response = models.CharField(max_length=255)
     status_code = models.IntegerField(null=True)
+    body_post = models.CharField(max_length=255, null=True)
+    body_get = models.CharField(max_length=255, null=True)
     ip_address = models.GenericIPAddressField(verbose_name="IP address from request", null=True)
 
     def __str__(self):
