@@ -1,4 +1,3 @@
-import json
 import time
 
 from catalog.models import RequestLog

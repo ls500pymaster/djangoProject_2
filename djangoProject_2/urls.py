@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('__debug__/', include('debug_toolbar.urls')),
     path('catalog/', include('catalog.urls')),
+    path('crm/', include('crm.urls')),
 ]
 
 handler404 = 'catalog.views.error_404'
