@@ -1,4 +1,3 @@
-import json
 import time
 
 from catalog.models import RequestLog
@@ -16,7 +15,7 @@ class RequestLogMiddleware:
 		response = self.get_response(request)
 		exec_time = int((time.monotonic() - start_time) * 1000)
 
-		if "admin" not in request.path:
+		if not request.path.startswith('/admin/'):
 			log = RequestLog(path=request.path,
 			                 method=request.method,
 			                 full_response=self.get_response(request),
