@@ -1,0 +1,28 @@
+{% extends 'crm/templates/base.html' %}
+{% load bootstrap_icons %}
+{% block content %}
+    <div class="container">
+      <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+          <th>Pages</th>
+          <th>Price</th>
+          <th>Rating</th>
+          <th>Pub Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for book in books_all %}
+        <tr>
+          <td>{{ book.name }}</td>
+            <td>{{ book.pages }}
+          <td>{{ book.price }}</td>
+            <td>{{ book.rating }}</td>
+        <td>{{ book.pubdate }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    {% endblock %}
+    </div>
