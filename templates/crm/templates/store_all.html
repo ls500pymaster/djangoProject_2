@@ -1,0 +1,20 @@
+{% extends 'crm/templates/base.html' %}
+{% load bootstrap_icons %}
+{% block content %}
+    <div class="container">
+      <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Store Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for store in store_all %}
+        <tr>
+          <td>{{ store.name }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    {% endblock %}
+    </div>
