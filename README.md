@@ -4,6 +4,16 @@
 
 ## Custom commands
 
+### Create fake book
+
+`python3 manage.py create_book 10
+`
+
+### Create fake author
+
+`python3 manage.py create_author 10
+`
+
 ### Create fake user
 
 `python manage.py create_users 5 
