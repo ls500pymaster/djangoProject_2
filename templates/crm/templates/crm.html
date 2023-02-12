@@ -1,4 +1,3 @@
-{% load static %}
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -6,7 +5,9 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Simple Sidebar - Start Bootstrap Template</title>
-        <link rel="stylesheet" href="{% static 'css/catalog/styles.css' %}">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="../static/css/styles.css">
+        <link rel="script" href="../static/js/scripts.js">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
         <link href='//fonts.googleapis.com/css2?family=Aboreto&display=swap' rel='stylesheet' type='text/css'>
@@ -15,14 +16,11 @@
         <div class="d-flex" id="wrapper">
             <!-- Sidebar-->
             <div class="border-end bg-white" id="sidebar-wrapper">
-                <div class="sidebar-heading border-bottom bg-light">Start Bootstrap</div>
                 <div class="list-group list-group-flush">
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Dashboard</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Shortcuts</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Overview</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Status</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="authors/">Authors</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="books/">Books</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="publishers/">Publishers</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="stores/">Stores</a>
                 </div>
             </div>
             <!-- Page content wrapper-->
@@ -30,12 +28,11 @@
                 <!-- Top navigation-->
                 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
                     <div class="container-fluid">
-                        <button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-                                <li class="nav-item active"><a class="nav-link" href="#!">Home</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#!">Link</a></li>
+                                <li class="nav-item active"><a class="nav-link" href="http://127.0.0.1:8000/crm/">Home</a></li>
+                                <li class="nav-item"><a class="nav-link" href="../catalog/">Link</a></li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -51,21 +48,25 @@
                 </nav>
                 <!-- Page content-->
                 <div class="container-fluid">
-                    <h1 class="mt-4">Simple Sidebar</h1>
-                    <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
-                    <p>
-                        Make sure to keep all page content within the
-                        <code>#page-content-wrapper</code>
-                        . The top navbar is optional, and just for demonstration. Just create an element with the
-                        <code>#sidebarToggle</code>
-                        ID which will toggle the menu when clicked.
+                    <h1 class="mt-4">Hillel IT School</h1>
+                    <p>Выполнять в новом приложении. Можете так же создать под это ДЗ новый репозиторий с новым проектом (Не забыть все обязательные шаги - <code>secret key, flake8, travis, gitignore, requirements, readme)</code>
+Добавить ddt (Django debug toolbar).</p>
+<p> Использовать в приложении модели из джанго доки
+    <code>https://docs.djangoproject.com/en/4.0/topics/db/aggregation/</code>
+заполнить базу большим количеством данных и предоставить мне возможность так же быстро заполнить базу (сделайте оба варианта, но ожидаю как минимум один из):
+1) создать менеджмент команду
+2) создать фикстуры (dumpdata loaddata менеджмент команды) (только модель пользователя и новые модели из приложения)
+Добавить модели в админку. Постараться использовать больше функционала (inline, фильтры, серчи, вывод и группировка полей в форме, filter_vertical, date_hierarchy...)
+</p>
+Создать несколько темплейтов, вьюшек, урлов для вывода данных по моделям. (Только вывод данных из базы, без форм)
+<p>в вьюшках и темплейтах нужно стараться минимизировать количество запросов в базу. (Префетчи, селекты, аннотации, агрегации)</p>
+На страницах выводить списки (в таблицах) или единичный элемент - например список магазинов или одного автора. Помимо полей из модели обязательно выводить что-то ещё полученное с использованием «Префетчи, селекты, аннотации, агрегации».
+количество доступных страниц - 8 (по странице списка и странице элемента на каждую модель)
+                    <p>со списка можно попасть на страницу элемента по ссылке которую вы должны сгенерировать в темплейте для каждой страницы
+    с дитейл страницы должна быть ссылка на список
                     </p>
                 </div>
             </div>
         </div>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="{% static 'js/scripts.js' %}"></script>
     </body>
 </html>
