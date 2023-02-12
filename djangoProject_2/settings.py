@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
+from django.conf.urls.static import static
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -60,12 +62,11 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'djangoProject_2.urls'
 
 CONN_HEALTH_CHECKS = True
-TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 
 TEMPLATES = [
 	{
 		'BACKEND': 'django.template.backends.django.DjangoTemplates',
-		'DIRS': [TEMPLATE_DIR],
+		'DIRS': ["templates"],
 		'APP_DIRS': True,
 		'OPTIONS': {
 			'context_processors': [
@@ -122,7 +123,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
+STATICFILES_DIRS = [
+	os.path.join(BASE_DIR, "templates/crm/static"),
+]
+
 STATIC_URL = 'static/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -139,4 +145,3 @@ INTERNAL_IPS = [
 SHELL_PLUS = "ipython"
 SHELL_PLUS_PRINT_SQL = True
 SHELL_PLUS_PRINT_SQL_TRUNCATE = None
-

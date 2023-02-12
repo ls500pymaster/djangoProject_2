@@ -1,11 +1,20 @@
 {% extends 'crm/templates/base.html' %}
 {% load bootstrap_icons %}
 {% block content %}
-    <div class="container">
       <table id="data" class="table table-striped">
     <thead>
-    <p> {{ book_solo }}</p>
-    {{ show_authors }}
+      <tr>
+        <th>Age</th>
+          <th>Authors</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for author in authors %}
+        <tr>
+          <td>{{ author.age}}</td>
+            <td>{{ author.name }}</td>
+        </tr>
+      {% endfor %}
     </tbody>
   </table>
     {% endblock %}

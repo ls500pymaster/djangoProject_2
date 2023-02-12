@@ -1,7 +1,6 @@
 {% extends 'crm/templates/base.html' %}
 {% load bootstrap_icons %}
 {% block content %}
-    <div class="container">
       <table id="data" class="table table-striped">
     <thead>
       <tr>
@@ -10,7 +9,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for author in authors_all %}
+      {% for author in author_solo %}
         <tr>
           <td>{{ author.name }}</td>
           <td>{{ author.age }}</td>

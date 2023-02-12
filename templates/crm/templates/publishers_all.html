@@ -11,7 +11,7 @@
     <tbody>
       {% for publisher in publishers_all %}
         <tr>
-          <td>{{ publisher.name }}</td>
+            <td><a href="{{ publisher }}">{{ publisher.name }}</a></td>
         </tr>
       {% endfor %}
     </tbody>

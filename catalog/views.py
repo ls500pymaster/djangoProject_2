@@ -8,7 +8,7 @@ import math
 
 def author_detail(request, pk):
     author_detail = get_object_or_404(Author, pk=pk)
-    return render(request, 'catalog/author_detail.html', {'author': author_detail})
+    return render(request, 'catalog/templates/catalog/author_detail.html', {'author': author_detail})
 
 
 def author_edit(request, pk):
@@ -21,17 +21,17 @@ def author_edit(request, pk):
             return redirect('author_detail', pk=author.pk)
     else:
         form = AuthorForm(instance=author)
-    return render(request, 'catalog/author_edit.html', {'form': form})
+    return render(request, 'catalog/templates/catalog/author_edit.html', {'form': form})
 
 
 def catalog(request):
     books = Book.objects.all()
-    return render(request, 'catalog/catalog.html', {'books': books})
+    return render(request, 'catalog/templates/catalog/catalog.html', {'books': books})
 
 
 def book_detail(request, pk):
     book = get_object_or_404(Book, pk=pk)
-    return render(request, 'catalog/book_detail.html', {'book': book})
+    return render(request, 'catalog/templates/catalog/book_detail.html', {'book': book})
 
 
 def book_new(request):
@@ -45,7 +45,7 @@ def book_new(request):
             return redirect('book_detail', pk=book.pk)
     else:
         form = BookForm()
-    return render(request, 'catalog/book_new.html', {'form': form})
+    return render(request, 'catalog/templates/catalog/book_new.html', {'form': form})
 
 
 def book_edit(request, pk):
@@ -60,15 +60,15 @@ def book_edit(request, pk):
             return redirect('book_detail', pk=book.pk)
     else:
         form = BookForm(instance=book)
-    return render(request, 'catalog/book_edit.html', {'form': form})
+    return render(request, 'catalog/templates/catalog/book_edit.html', {'form': form})
 
 
 def triangle(request):
     form = TriangleForm(request.GET)
     if form.is_valid():
         form.result = math.hypot(form.cleaned_data['cat_a'], form.cleaned_data['cat_b'])
-    return render(request, 'catalog/triangle.html', {'form': form})
+    return render(request, 'catalog/templates/catalog/triangle.html', {'form': form})
 
 
 def error_404(request, exception):
-    return render(request, 'catalog/404.html')
+    return render(request, 'catalog/templates/catalog/404.html')
