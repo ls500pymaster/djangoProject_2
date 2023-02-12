@@ -4,17 +4,18 @@
       <table id="data" class="table table-striped">
     <thead>
       <tr>
+          <th>Author</th>
         <th>Age</th>
-          <th>Authors</th>
       </tr>
     </thead>
     <tbody>
       {% for author in authors %}
         <tr>
-          <td>{{ author.age}}</td>
             <td>{{ author.name }}</td>
+        <td>{{ author.age}}</td>
         </tr>
       {% endfor %}
+    {{ highly_rated }}
     </tbody>
   </table>
     {% endblock %}
