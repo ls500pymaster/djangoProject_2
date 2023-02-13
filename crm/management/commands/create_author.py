@@ -1,7 +1,5 @@
-from django.contrib.auth.models import User
 from crm.models import Author
 from django.core.management.base import BaseCommand
-from django.contrib.auth.hashers import make_password
 from faker import Faker
 
 fake = Faker()
