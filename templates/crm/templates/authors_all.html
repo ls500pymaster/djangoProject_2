@@ -15,19 +15,17 @@
 <td><a href="{{ author }}">{{ author.name }}</a></td>
         <td>{{ author.age }}</td>
           {% endfor %}
-      <tr>
-        <th>Young author</th>
-        <th>Age</th>
-      </tr>
-      {% for author in get_all_authors %}
-          <tr>
-          <td><a href="{{ author }}">{{ author.name }}</a></td>
-        <td>{{ author.age }}</td>
-        </tr>
 
-
-
-      {% endfor %}
+{#      <tr>#}
+{#        <th>Young author</th>#}
+{#        <th>Age</th>#}
+{#      </tr>#}
+{#      {% for author in young_authors %}#}
+{#          <tr>#}
+{#          <td><a href="{{ author }}">{{ author.name }}</a></td>#}
+{#        <td>{{ author.age }}</td>#}
+{#        </tr>#}
+{#      {% endfor %}#}
     </tbody>
   </table>
     {% endblock %}

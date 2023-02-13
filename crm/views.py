@@ -1,22 +1,27 @@
-from django.db.models import Count, Q, Avg, Max, Min, Sum
+from django.db.models import Count, Avg, Max
 from django.shortcuts import render, get_object_or_404
 from crm.models import Author, Publisher, Book, Store
 
 
-def crm_main(request):
-    pass
-    return render(request, 'crm/templates/crm.html')
+def index_crm(request):
+    total_authors = Author.objects.aggregate(book_count=Count("book"))['book_count']
+    average_price = Book.objects.aggregate(Avg('price'))['price__avg']
+    # author = Author.objects.filter(age__gte=20, age__lte=30)
+    return render(request, 'crm/templates/index.html', {'total_authors': total_authors, 'average_price': average_price})
 
 
 def get_all_authors(request):
-    authors_all = Author.objects.prefetch_related()
-    young_authors = Author.objects.annotate(Min("age")).filter(age__lte=16)
-    return render(request, 'crm/templates/authors_all.html', {'authors_all': authors_all, 'young_authors': young_authors})
+    authors_all = Author.objects.all()
+    # young_authors = Author.objects.annotate(Min("age")).filter(age__lte=16)
+    return render(request, 'crm/templates/authors_all.html', {'authors_all': authors_all})
 
 
-def get_author_object(request, pk):
-    get_author = Author.objects.filter(name__exact=pk)
-    return render(request, 'crm/templates/author.html', {'get_author': get_author})
+def get_author_object(request, name):
+    get_author = Author.objects.filter(book__authors__name=name)
+    get_object_or_404(Author, name=name)
+    get_author_books = Book.objects.filter(authors__name=name)
+    return render(request, 'crm/templates/author.html', {'get_author_books': get_author_books,
+                                                         'get_author': get_author[0]})
 
 
 def get_all_publishers(request):
@@ -27,11 +32,12 @@ def get_all_publishers(request):
 def get_publisher_object(request, pk):
     publisher_name = Publisher.objects.filter(name__exact=pk)
     count_publishers = Publisher.objects.prefetch_related().all().filter
-    return render(request, 'crm/templates/publisher.html', {'publisher_name': publisher_name, 'count_publishers': count_publishers})
+    return render(request, 'crm/templates/publisher.html', {'publisher_name': publisher_name,
+                                                            'count_publishers': count_publishers})
 
 
 def get_all_books(request):
-    books_all = Book.objects.all().prefetch_related()
+    books_all = Book.objects.all()
     return render(request, 'crm/templates/books_all.html', {'books_all': books_all})
 
 
@@ -47,9 +53,9 @@ def get_all_stores(request):
 
 
 def get_store_object(request, pk):
-    store = Store.objects.filter(name__exact=pk)
+    get_store = Store.objects.filter(name__exact=pk)
     books_price_avg = Store.objects.filter(books__store__name=pk).annotate(Max("books__price"))
-    return render(request, 'crm/templates/store.html', {'store': store,
+    return render(request, 'crm/templates/store.html', {'store': get_store,
                                                         'books_price_avg': books_price_avg[0].books__price__max})
 
 
