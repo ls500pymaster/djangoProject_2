@@ -1,0 +1,15 @@
+{% extends 'catalog/templates/catalog/base.html' %}
+{% load bootstrap_icons %}
+{% block content %}
+    <div class="post">
+        {% if author.first_name %}
+            <div class="date">
+                {{ author.first_name }}
+            </div>
+        {% endif %}
+        <a class="btn btn-default" href="{% url 'author_edit' pk=author.pk %}"><i class="bi bi-pencil-fill"></i></a>
+        <h1>{{ author.first_name }}</h1>
+        <p>{{ author.last_name|linebreaksbr }}</p>
+        <p>{{ author.email|linebreaksbr }}</p>
+    </div>
+{% endblock %}

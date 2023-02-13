@@ -1,22 +1,21 @@
-{% extends 'crm/templates/base.html' %}
+{% extends 'templates/base.html' %}
 {% load bootstrap_icons %}
 {% block content %}
-    <div class="container">
       <table id="data" class="table table-striped">
     <thead>
       <tr>
-        <th>Store Name</th>
-          <th>AVG Book Price</th>
+          <th>Author</th>
+        <th>Age</th>
       </tr>
     </thead>
     <tbody>
-      {% for store in store %}
+      {% for author in authors %}
         <tr>
-          <td>{{ store.name }}</td>
-        <td>{{ books_price_avg }}</td>
+            <td>{{ author.name }}</td>
+        <td>{{ author.age}}</td>
         </tr>
       {% endfor %}
-
+    {{ highly_rated }}
     </tbody>
   </table>
     {% endblock %}
