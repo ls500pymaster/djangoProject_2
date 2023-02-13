@@ -9,7 +9,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for publisher in publishers_all %}
+      {% for publisher in get_all_publishers %}
         <tr>
             <td><a href="{{ publisher }}">{{ publisher.name }}</a></td>
         </tr>
