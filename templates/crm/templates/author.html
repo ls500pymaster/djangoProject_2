@@ -4,15 +4,17 @@
       <table id="data" class="table table-striped">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Age</th>
+        <th>Name of the book</th>
+        <th>Author</th>
+          <th>Publishers</th>
       </tr>
     </thead>
     <tbody>
-      {% for author in get_author %}
+      {% for author in get_author_books %}
         <tr>
           <td>{{ author.name }}</td>
-          <td>{{ author.age }}</td>
+        <td>{{ get_author }}</td>
+        <td>{{ author.publisher }}</td>
         </tr>
       {% endfor %}
     </tbody>

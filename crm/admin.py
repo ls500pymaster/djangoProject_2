@@ -29,7 +29,7 @@ class BookAdmin(admin.ModelAdmin):
 	list_display = ("name", "rating", "get_author")
 	list_filter = ("rating", "pubdate")
 	list_display_links = ('name', "get_author")
-	search_fields = ("name", "rating")
+	search_fields = ("name", "rating", "authors__name")
 	date_hierarchy = "pubdate"
 	list_per_page = 20
 
