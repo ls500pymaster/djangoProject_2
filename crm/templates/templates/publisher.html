@@ -1,17 +1,17 @@
-{% extends 'crm/templates/base.html' %}
+{% extends 'templates/base.html' %}
 {% load bootstrap_icons %}
 {% block content %}
     <div class="container">
       <table id="data" class="table table-striped">
     <thead>
       <tr>
-        <th>Store Name</th>
+        <th>Name</th>
       </tr>
     </thead>
     <tbody>
-      {% for store in stores_all %}
+      {% for publisher in publisher_name %}
         <tr>
-          <td><a href="{{ store }}">{{ store }}</a></td>
+          <td>{{ publisher.name }}</td>
         </tr>
       {% endfor %}
     </tbody>
