@@ -1,4 +1,4 @@
-from django.db.models import Count, Avg, Max
+from django.db.models import Count, Avg, Max, Min
 from django.shortcuts import render, get_object_or_404
 from crm.models import Author, Publisher, Book, Store
 
@@ -12,8 +12,8 @@ def index_crm(request):
 
 def get_all_authors(request):
     authors_all = Author.objects.all()
-    # young_authors = Author.objects.annotate(Min("age")).filter(age__lte=16)
-    return render(request, 'templates/authors_all.html', {'authors_all': authors_all})
+    young_authors = Author.objects.annotate(Min("age")).filter(age__lte=16)
+    return render(request, 'templates/authors_all.html', {'authors_all': authors_all, 'young_authors': young_authors})
 
 
 def get_author_object(request, name):
@@ -25,19 +25,22 @@ def get_author_object(request, name):
 
 
 def get_all_publishers(request):
-    publishers_all = Publisher.objects.annotate(num_books=Count('book', distinct=True)).filter(book__rating__gt=8.5)
-    return render(request, 'templates/publishers_all.html', {'publishers_all': publishers_all})
+    publishers_all = Publisher.objects.annotate(num_books=Count('book', distinct=True)).filter(book__rating__gt=5)
+    publisher_count = Publisher.objects.aggregate(publisher_count=Count("name"))['publisher_count']
+    return render(request, 'templates/publishers_all.html', {'publishers_all': publishers_all,
+                                                             'publisher_count': publisher_count})
 
 
 def get_publisher_object(request, pk):
     publisher_name = Publisher.objects.filter(name__exact=pk)
-    count_publishers = Publisher.objects.prefetch_related().all().filter
+    count_publishers = Publisher.objects.select_related("publisher").filter(name__contains=pk[0],
+                                                                            name__endswith=pk[-1]).count()
     return render(request, 'templates/publisher.html', {'publisher_name': publisher_name,
                                                             'count_publishers': count_publishers})
 
 
 def get_all_books(request):
-    books_all = Book.objects.all()
+    books_all = Book.objects.order_by("name").prefetch_related()
     return render(request, 'templates/books_all.html', {'books_all': books_all})
 
 

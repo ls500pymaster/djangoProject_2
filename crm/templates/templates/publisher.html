@@ -1,6 +1,13 @@
 {% extends 'templates/base.html' %}
 {% load bootstrap_icons %}
 {% block content %}
+        <div class="container">
+      <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Total Filtered Publishers: {{ count_publishers }} </th>
+      </tr>
+    </thead>
     <div class="container">
       <table id="data" class="table table-striped">
     <thead>

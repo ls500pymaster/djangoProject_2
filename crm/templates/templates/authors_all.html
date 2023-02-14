@@ -5,16 +5,41 @@
       <table id="data" class="table table-striped">
     <thead>
       <tr>
+        <th>Young Author</th>
+          <th>Age</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for author in young_authors %}
+        <tr>
+          <td>{{ author.name }}</td>
+        <td>{{ author.age }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    </div>
+    <div class="container">
+      <table id="data" class="table table-striped">
+    <thead>
+      <tr>
         <th>Name</th>
-        <th>Age</th>
+          <th>Age</th>
       </tr>
     </thead>
     <tbody>
       {% for author in authors_all %}
-          <tr>
-<td><a href="{{ author }}">{{ author.name }}</a></td>
+        <tr>
+          <td>{{ author.name }}</td>
         <td>{{ author.age }}</td>
-          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    {% endblock %}
+    </div>
+
+
 
 {#      <tr>#}
 {#        <th>Young author</th>#}
@@ -26,10 +51,6 @@
 {#        <td>{{ author.age }}</td>#}
 {#        </tr>#}
 {#      {% endfor %}#}
-    </tbody>
-  </table>
-    {% endblock %}
-    </div>
 
 
 
