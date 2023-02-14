@@ -24,7 +24,7 @@ def get_all_authors(request):
 def get_author_object(request, name):
     get_author = Author.objects.filter(book__authors__name=name)
     get_object_or_404(Author, name=name)
-    get_author_books = Book.objects.filter(authors__name=name)
+    get_author_books = Book.objects.filter(authors__name=name).select_related("publisher").order_by("authors__age")
     return render(request, 'templates/author_detail.html', {'get_author_books': get_author_books,
                                                          'get_author': get_author[0]})
 
