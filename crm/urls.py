@@ -13,5 +13,7 @@ urlpatterns = [
     path('books/<book_id>/', views.get_book_object, name='get_book_object'),
 
     path('stores/', views.get_all_stores, name='get_all_stores'),
-    path('stores/<pk>/', views.get_store_object, name='get_store_object')
+    path('stores/<pk>/', views.get_store_object, name='get_store_object'),
+
+    path('celery/', views.generate_celery_form, name='generate_celery_form')
 ]

@@ -59,5 +59,10 @@ def get_store_object(request, pk):
                                                         'books_price_avg': books_price_avg[0].books__price__max})
 
 
+def generate_celery_form(request):
+    pass
+    return render(request, 'templates/celery_form.html')
+
+
 def error_404(request, exception):
     return render(request, 'templates/404.html')
