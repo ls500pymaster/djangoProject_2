@@ -12,7 +12,7 @@
     <tbody>
       {% for author in young_authors %}
         <tr>
-          <td>{{ author.name }}</td>
+            <td><a href="{{ author.name }}">{{ author }}</a></td>
         <td>{{ author.age }}</td>
         </tr>
       {% endfor %}
@@ -30,7 +30,7 @@
     <tbody>
       {% for author in authors_all %}
         <tr>
-          <td>{{ author.name }}</td>
+            <td><a href="{{ author.name }}">{{ author }}</a></td>
         <td>{{ author.age }}</td>
         </tr>
       {% endfor %}
@@ -38,20 +38,5 @@
   </table>
     {% endblock %}
     </div>
-
-
-
-{#      <tr>#}
-{#        <th>Young author</th>#}
-{#        <th>Age</th>#}
-{#      </tr>#}
-{#      {% for author in young_authors %}#}
-{#          <tr>#}
-{#          <td><a href="{{ author }}">{{ author.name }}</a></td>#}
-{#        <td>{{ author.age }}</td>#}
-{#        </tr>#}
-{#      {% endfor %}#}
-
-
 
 
