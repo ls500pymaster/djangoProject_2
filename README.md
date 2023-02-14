@@ -6,34 +6,40 @@
 
 ### Create fake book
 
-`python3 manage.py create_book 10
-`
+```bash
+python3 manage.py create_book 100
+```
 
 ### Create fake author
 
-`python3 manage.py create_author 10
-`
+```bash
+python3 manage.py create_author 100
+```
 
 ### Create fake user
 
-`python manage.py create_users 5 
-`
+```bash
+python manage.py create_users 5 
+```
 ### Deleter users (except superuser)
 
-`python manage.py delete_users 1 2 3 4 5
-`
+```bash
+python manage.py delete_users 1 2 3 4 5
+```
 ### Fixtures
 
 fixtures.json
 
-`python manage.py dumpdata --all --indent 2 -o fixtures.json
-`
+```bash
+python manage.py dumpdata --all --indent 2 -o fixtures.json
+```
 
 ### Runserver
-` python manage.py runserver --insecure
-`
-Debug mode False, because I need to load statics for custom 404 error page
+```bash
+python manage.py runserver --insecure
+```
 
+Debug mode False, because I need to load statics for custom 404 error page
 
 ### Django model forms
 ` http://127.0.0.1:8000/catalog/author/2/
@@ -45,6 +51,8 @@ Debug mode False, because I need to load statics for custom 404 error page
 ` http://127.0.0.1:8000/catalog/
 ` All books
 
+` http://127.0.0.1:8000/crm/
+` CRM app. Using annotate, aggregate, prefetch related, select related
 
 #### ### Graph_models
 
@@ -55,7 +63,7 @@ To group all the application and output into PNG file
 Include only some applications
 `python manage.py graph_models app1 app2 -o app1_app2.png`
 
-nclude only some specific models
+Include only some specific models
 `python manage.py graph_models -a -I Foo,Bar -o foo_bar.png`
 
 OR exclude certain models 

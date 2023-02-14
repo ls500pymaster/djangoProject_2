@@ -1,7 +1,13 @@
 {% extends 'templates/base.html' %}
 {% load bootstrap_icons %}
 {% block content %}
-    <div class="container">
+        <div class="container">
+      <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Total Stores: {{ total_stores }} </th>
+      </tr>
+    </thead>
       <table id="data" class="table table-striped">
     <thead>
       <tr>

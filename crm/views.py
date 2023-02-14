@@ -5,29 +5,34 @@ from crm.models import Author, Publisher, Book, Store
 
 def index_crm(request):
     total_authors = Author.objects.aggregate(book_count=Count("book"))['book_count']
-    average_price = Book.objects.aggregate(Avg('price'))['price__avg']
+    average_price = Book.objects.aggregate(Avg("price"))["price__avg"]
+    average_pages = Book.objects.aggregate(Avg("pages"))["pages__avg"]
+    author_max_age = Author.objects.aggregate(Max("age"))["age__max"]
     # author = Author.objects.filter(age__gte=20, age__lte=30)
-    return render(request, 'templates/index.html', {'total_authors': total_authors, 'average_price': average_price})
+    return render(request, 'templates/index.html', {'total_authors': total_authors,
+                                                    'average_price': average_price,
+                                                    'average_pages': average_pages,
+                                                    'author_max_age': author_max_age})
 
 
 def get_all_authors(request):
     authors_all = Author.objects.all()
     young_authors = Author.objects.annotate(Min("age")).filter(age__lte=16)
-    return render(request, 'templates/authors_all.html', {'authors_all': authors_all, 'young_authors': young_authors})
+    return render(request, 'templates/author_list.html', {'authors_all': authors_all, 'young_authors': young_authors})
 
 
 def get_author_object(request, name):
     get_author = Author.objects.filter(book__authors__name=name)
     get_object_or_404(Author, name=name)
     get_author_books = Book.objects.filter(authors__name=name)
-    return render(request, 'templates/author.html', {'get_author_books': get_author_books,
+    return render(request, 'templates/author_detail.html', {'get_author_books': get_author_books,
                                                          'get_author': get_author[0]})
 
 
 def get_all_publishers(request):
     publishers_all = Publisher.objects.annotate(num_books=Count('book', distinct=True)).filter(book__rating__gt=5)
     publisher_count = Publisher.objects.aggregate(publisher_count=Count("name"))['publisher_count']
-    return render(request, 'templates/publishers_all.html', {'publishers_all': publishers_all,
+    return render(request, 'templates/publisher_list.html', {'publishers_all': publishers_all,
                                                              'publisher_count': publisher_count})
 
 
@@ -35,30 +40,32 @@ def get_publisher_object(request, pk):
     publisher_name = Publisher.objects.filter(name__exact=pk)
     count_publishers = Publisher.objects.select_related("publisher").filter(name__contains=pk[0],
                                                                             name__endswith=pk[-1]).count()
-    return render(request, 'templates/publisher.html', {'publisher_name': publisher_name,
+    return render(request, 'templates/publisher_detail.html', {'publisher_name': publisher_name,
                                                             'count_publishers': count_publishers})
 
 
 def get_all_books(request):
     books_all = Book.objects.order_by("name").prefetch_related()
-    return render(request, 'templates/books_all.html', {'books_all': books_all})
+    total_books = Book.objects.aggregate(book_count=Count("name"))['book_count']
+    return render(request, 'templates/book_list.html', {'books_all': books_all, 'total_books': total_books})
 
 
 def get_book_object(request, book_id):
     book = Book.objects.get(name=book_id)
-    authors = book.authors.prefetch_related()
-    return render(request, 'templates/book.html', {'authors': authors})
+    authors = book.authors.filter(age__gt=30).annotate(Max("age"))
+    return render(request, 'templates/book_detail.html', {'authors': authors})
 
 
 def get_all_stores(request):
     stores_all = Store.objects.order_by("name").prefetch_related()
-    return render(request, 'templates/stores_all.html', {'stores_all': stores_all})
+    total_stores = Store.objects.aggregate(store_count=Count("name"))['store_count']
+    return render(request, 'templates/store_list.html', {'stores_all': stores_all, 'total_stores': total_stores})
 
 
 def get_store_object(request, pk):
     get_store = Store.objects.filter(name__exact=pk)
     books_price_avg = Store.objects.filter(books__store__name=pk).annotate(Max("books__price"))
-    return render(request, 'templates/store.html', {'store': get_store,
+    return render(request, 'templates/store_detail.html', {'store': get_store,
                                                         'books_price_avg': books_price_avg[0].books__price__max})
 
 
