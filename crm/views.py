@@ -1,6 +1,13 @@
+from datetime import datetime
+
 from django.db.models import Count, Avg, Max, Min
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic.base import TemplateView
+from django.views.generic.edit import FormView
+
 from crm.models import Author, Publisher, Book, Store
+# from .forms import FeedbackForm, ScheduleEmailForm
+from .tasks import send_feedback_email_task
 
 
 def index_crm(request):
@@ -69,10 +76,33 @@ def get_store_object(request, pk):
                                                         'books_price_avg': books_price_avg[0].books__price__max})
 
 
-def generate_celery_form(request):
-    pass
-    return render(request, 'templates/celery_form.html')
+def schedule_email_view(request):
+    if request.method == "POST":
+        # get form data
+        name = request.POST['name']
+        email = request.POST['email']
+        subject = request.POST['subject']
+        message = request.POST['message']
+        date = request.POST['date']
+        print(date)
+        # convert date string to datetime object
+        date = datetime.strptime(date, '%Y-%m-%dT%H:%M')
+        print(request.POST)
+        print(date)
+        # schedule email using Celery task
+        send_feedback_email_task.apply_async(args=[name, email, subject, message], eta=date)
+
+        # redirect to a page that shows the user that the email was scheduled
+        return redirect('crm:success')
+    else:
+        return render(request, 'templates/feedback.html')
+
+
+def send_success_email(request):
+    return render(request, 'templates/success.html')
 
 
 def error_404(request, exception):
     return render(request, 'templates/404.html')
+
+

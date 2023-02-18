@@ -1,5 +1,9 @@
 from django.urls import path
+
 from . import views
+# from .views import SuccessView
+
+app_name = 'crm'
 
 urlpatterns = [
     path('', views.index_crm, name='index_crm'),
@@ -15,5 +19,6 @@ urlpatterns = [
     path('stores/', views.get_all_stores, name='get_all_stores'),
     path('stores/<pk>/', views.get_store_object, name='get_store_object'),
 
-    path('celery/', views.generate_celery_form, name='generate_celery_form')
+    path("feedback/", views.schedule_email_view, name="feedback"),
+    path("feedback/success/", views.send_success_email, name="success"),
 ]

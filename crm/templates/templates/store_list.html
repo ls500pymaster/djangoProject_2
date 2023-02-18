@@ -1,26 +1,24 @@
 {% extends 'templates/base.html' %}
 {% load bootstrap_icons %}
 {% block content %}
-        <div class="container">
-      <table id="data" class="table table-striped">
+    <table id="data" class="table table-striped">
     <thead>
-      <tr>
+    <tr>
         <th>Total Stores: {{ total_stores }} </th>
-      </tr>
+    </tr>
     </thead>
-      <table id="data" class="table table-striped">
-    <thead>
-      <tr>
-        <th>Store Name</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for store in stores_all %}
+    <table id="data" class="table table-striped">
+        <thead>
         <tr>
-          <td><a href="{{ store }}">{{ store }}</a></td>
+            <th>Store Name</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-    {% endblock %}
-    </div>
+        </thead>
+        <tbody>
+        {% for store in stores_all %}
+            <tr>
+                <td><a href="{{ store }}">{{ store }}</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

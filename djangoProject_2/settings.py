@@ -45,7 +45,21 @@ INSTALLED_APPS = [
 	'django_print_settings',
 	'crispy_forms',
 	'django_bootstrap_icons',
+	'bootstrap_datepicker_plus',
+	'bootstrap4',
+	'datetimewidget',
+	'widget_tweaks',
+	'django_celery_results',
+	'django_rq',
 ]
+
+RQ_QUEUES = {
+    'default': {
+    'HOST': 'localhost',
+    'PORT': 6379,
+    'DB': 0,
+    }
+}
 
 MIDDLEWARE = [
 	'django.middleware.security.SecurityMiddleware',
@@ -78,6 +92,17 @@ TEMPLATES = [
 		},
 	},
 ]
+
+BOOTSTRAP_DATEPICKER_PLUS = {
+    "options": {
+        "locale": "bn",
+    },
+    "variant_options": {
+        "date": {
+            "format": "MM/DD/YYYY",
+        },
+    }
+}
 
 WSGI_APPLICATION = 'djangoProject_2.wsgi.application'
 
@@ -145,3 +170,27 @@ INTERNAL_IPS = [
 SHELL_PLUS = "ipython"
 SHELL_PLUS_PRINT_SQL = True
 SHELL_PLUS_PRINT_SQL_TRUNCATE = None
+
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Celery Configuration Options
+CELERY_TIMEZONE = "Europe/Kiev"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
+CELERY_CACHE_BACKEND = 'django-cache'
+CELERY_BROKER_URL = "amqp://guest@localhost//"
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# Cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/',
+        'OPTIONS': {
+        'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}

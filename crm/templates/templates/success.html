@@ -1,0 +1,15 @@
+{% extends 'templates/base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% block content %}
+
+<h1>Thank You!</h1>
+
+<p>Your feedback has been recorded.</p>
+<p>If you have more to say, you can <a href="{% url 'crm:feedback' %}">submit another feedback</a> response.</p>
+
+{% endblock content %}

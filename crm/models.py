@@ -39,3 +39,14 @@ class Store(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class Reminder(models.Model):
+    email = models.EmailField()
+    text = models.TextField()
+    remind_at = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+
+
