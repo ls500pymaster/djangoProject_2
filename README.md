@@ -175,3 +175,8 @@ False
 
 ##### <AsyncResult: f7bd8bbb-eb76-452c-992a-d807b455da24>
 
+
+### Celery tasks
+
+` http://127.0.0.1:8000/crm/feedback/
+` 
