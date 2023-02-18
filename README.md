@@ -69,7 +69,66 @@ Include only some specific models
 OR exclude certain models 
 `python manage.py graph_models -a X Foo,Bar -o no_foo_bar.png`
 
->>> from django.contrib.auth.models import User
+
+## Docker Rabbitmq, Redis
+
+` docker run -d -p 5672:5672 rabbitmq
+` 
+
+`  docker run -d -p 6379:6379 redis
+` 
+
+## Rabbitmq
+
+MacOS install with brew
+
+` brew install rabbitmq
+` 
+
+Localhost address and port
+
+`
+http://localhost:15672/
+guest:guest
+` 
+
+Rabbitmq info command
+
+`
+brew info rabbitmq
+` 
+
+To start a node in the background, use
+
+`
+brew services start rabbitmq
+` 
+
+To stop
+
+`
+brew services stop rabbitmq
+` 
+
+## Redis
+
+` brew install redis
+` 
+
+Start server in background
+
+` brew services start redis
+` 
+
+Check info about running redis service
+
+` brew services info redis
+` 
+
+To stop the service
+
+` brew services stop redis
+` 
 
 # Create a regular user 'foo'
 >>> user = User.objects.create_user('foo', 'foo.bar@xxx.com', 'bar')
@@ -100,3 +159,19 @@ False
 
 >>> User.objects.all()
 [<User: admin>, <User: abegail>]
+
+
+## Celery example Django ORM
+
+
+` from crm import tasks
+` 
+
+` from crm.tasks import add
+` 
+
+` add.delay(1,4)
+` 
+
+##### <AsyncResult: f7bd8bbb-eb76-452c-992a-d807b455da24>
+

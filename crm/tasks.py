@@ -1,19 +1,18 @@
-from celery import task
-from django.core.mail import send_mail
-from .models import Book
+from celery import shared_task
+from celery import Celery
+from time import sleep
 
-@task
-def order_created(name):
-    """
-    Задача для отправки уведомления по электронной почте при успешном создании заказа.
-    """
-    order = Book.objects.get(name=name)
-    subject = 'Order nr. {}'.format(name)
-    message = 'Dear {},\n\nYou have successfully placed an order.\
-                Your order id is {}.'.format(order.first_name,
-                                             order.id)
-    mail_sent = send_mail(subject,
-                          message,
-                          'admin@crm.com',
-                          [order.email])
-    return mail_sent
+from django.core.mail import send_mail
+
+app = Celery('crm', broker='amqp://guest@localhost//', backend='redis://127.0.0.1:6379')
+
+@shared_task()
+def send_feedback_email_task(name, email, subject, message):
+    sleep(1)  # Simulate expensive operation(s) that freeze Django
+    send_mail(
+        [name],
+        [email],
+        [subject],
+        "support@example.com",
+        [message],
+    )
