@@ -4,7 +4,7 @@ from time import sleep
 
 from django.core.mail import send_mail
 
-app = Celery('crm', broker='amqp://guest@localhost//', backend='redis://127.0.0.1:6379')
+# app = Celery('crm', broker='amqp://guest@localhost//', backend='redis://127.0.0.1:6379')
 
 @shared_task()
 def send_feedback_email_task(name, email, subject, message):
