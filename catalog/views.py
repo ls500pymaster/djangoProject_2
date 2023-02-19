@@ -1,9 +1,32 @@
 from django.shortcuts import redirect
+from django.views import generic
+
 from .models import Book, Author
 from django.shortcuts import render, get_object_or_404
 from .forms import BookForm, TriangleForm, AuthorForm
 from django.utils import timezone
 import math
+
+
+class BookListView(generic.ListView):
+    model = Book
+    template_name = 'catalog/templates/catalog/book_list.html'  # Определение имени вашего шаблона и его расположения
+    context_object_name = 'my_book_list'
+
+    def get_queryset(self):
+        return Book.objects.filter(title__icontains='py')[:5] # Получить 5 книг, содержащих 'war' в заголовке
+
+
+class BookDetailView(generic.DetailView):
+    template_name = 'catalog/templates/catalog/book_detail.html'  # Определение имени вашего шаблона и его расположения
+    context_object_name = 'book_detail'
+    model = Book
+
+
+class AuthorDetailView(generic.DetailView):
+    template_name = 'catalog/templates/catalog/author_detail.html'
+    context_object_name = 'author_detal'
+    model = Author
 
 
 def author_detail(request, pk):
@@ -25,13 +48,14 @@ def author_edit(request, pk):
 
 
 def catalog(request):
-    books = Book.objects.all()
-    return render(request, 'catalog/templates/catalog/catalog.html', {'books': books})
+    books = Book.objects.all().count()
+    authors = Author.objects.all().count()
+    return render(request, 'catalog/templates/catalog/catalog.html', {'books': books, 'authors': authors})
 
 
-def book_detail(request, pk):
-    book = get_object_or_404(Book, pk=pk)
-    return render(request, 'catalog/templates/catalog/book_detail.html', {'book': book})
+# def book_detail(request, pk):
+#     book = get_object_or_404(Book, pk=pk)
+#     return render(request, 'catalog/templates/catalog/book_detail.html', {'book': book})
 
 
 def book_new(request):
