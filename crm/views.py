@@ -1,5 +1,19 @@
 from datetime import datetime
-
+import time
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import sqlite3 as sq
+options = Options()
+# Show or hide browser
+options.headless = True
+# disable webrdiver-mode:
+options.add_argument('--disable-blink-features=AutomationControlled')
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
+                          options=options,
+                          )
 from django.db.models import Count, Avg, Max, Min
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.base import TemplateView
@@ -7,7 +21,7 @@ from django.views.generic.edit import FormView
 
 from crm.models import Author, Publisher, Book, Store
 # from .forms import FeedbackForm, ScheduleEmailForm
-from .tasks import send_feedback_email_task
+from .tasks import send_feedback_email_task, add_quote_to_db
 
 
 def index_crm(request):
@@ -88,7 +102,8 @@ def schedule_email_view(request):
         date = datetime.strptime(date, '%Y-%m-%dT%H:%M')
         # schedule email using Celery task
         send_feedback_email_task.apply_async(kwargs=
-                                             {"name": name, "email": email, "subject": subject, "message": message}, eta=date)
+                                             {"name": name, "email": email, "subject": subject, "message": message},
+                                             eta=date)
 
         # redirect to a page that shows the user that the email was scheduled
         return redirect('crm:success')
@@ -103,4 +118,16 @@ def send_success_email(request):
 def error_404(request, exception):
     return render(request, 'templates/404.html')
 
+
+def quote_scraper(request):
+    driver.get("https://quotes.toscrape.com")
+    quote = driver.find_element(by=By.XPATH, value="//span[contains(text(),'“The world as we have created it is a process of o')]").text
+    driver.implicitly_wait(1)
+    author = driver.find_element(by=By.XPATH, value="//div[@class='col-md-8']//div[1]//span[2]//small[1]").text
+    driver.implicitly_wait(1)
+    tag = driver.find_element(by=By.CLASS_NAME, value="tags").text
+    context = f"Text is: {quote} \n {author} \n {tag}"
+    result = add_quote_to_db.delay(quote, author)
+    print(result)
+    return render(request, 'templates/quote_list.html', {'context': context, 'result': result})
 
