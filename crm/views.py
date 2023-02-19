@@ -84,13 +84,11 @@ def schedule_email_view(request):
         subject = request.POST['subject']
         message = request.POST['message']
         date = request.POST['date']
-        print(date)
         # convert date string to datetime object
         date = datetime.strptime(date, '%Y-%m-%dT%H:%M')
-        print(request.POST)
-        print(date)
         # schedule email using Celery task
-        send_feedback_email_task.apply_async(args=[name, email, subject, message], eta=date)
+        send_feedback_email_task.apply_async(kwargs=
+                                             {"name": name, "email": email, "subject": subject, "message": message}, eta=date)
 
         # redirect to a page that shows the user that the email was scheduled
         return redirect('crm:success')
