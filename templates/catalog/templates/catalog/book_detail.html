@@ -1,15 +1,25 @@
 {% extends 'catalog/templates/catalog/base.html' %}
 {% load bootstrap_icons %}
+
 {% block content %}
-    <div class="post">
-        {% if book.publication_date %}
-            <div class="date">
-                {{ book.publication_date }}
-            </div>
-        {% endif %}
-        <a class="btn btn-default" href="{% url 'book_edit' pk=book.pk %}"><i class="bi bi-pencil-fill"></i></a>
-        <h1>{{ book.title }}</h1>
-        <p>{{ book.authors.get|linebreaksbr }}</p>
-        <p>{{ book.description|linebreaksbr }}</p>
-    </div>
+  <h1>Title: {{ book_detail.title }}</h1>
+
+  <p><strong>Author:</strong> <a href="">{{ book_detail.title }}</a></p> <!-- author detail link not yet defined -->
+  <p><strong>Publisher:</strong> {{ book_detail.publisher }}</p>
+  <p><strong>Publication date:</strong> {{ book_detail.publication_date }}</p>
+  <p><strong>Status:</strong> {{ book_detail.status }}</p>
+  <p><strong>Genre:</strong> {% for genre in book_detail.genre.all %} {{ genre }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+  <p><strong>Authors:</strong> {% for author in book_detail.authors.all %} {{ author }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Copies</h4>
+
+    {% for copy in book.bookinstance_set.all %}
+    <hr>
+    <p class="{% if copy.status == 'a' %}text-success{% elif copy.status == 'd' %}text-danger{% else %}text-warning{% endif %}">{{ copy.get_status_display }}</p>
+    {% if copy.status != 'a' %}<p><strong>Due to be returned:</strong> {{copy.due_back}}</p>{% endif %}
+    <p><strong>Imprint:</strong> {{copy.imprint}}</p>
+    <p class="text-muted"><strong>Id:</strong> {{copy.id}}</p>
+    {% endfor %}
+  </div>
 {% endblock %}

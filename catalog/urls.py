@@ -1,9 +1,12 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 urlpatterns = [
-    path('', views.catalog, name='catalog'),
-    path('book/<int:pk>/', views.book_detail, name='book_detail'),
+    re_path(r'^$', views.catalog, name='catalog'),
+    re_path(r'^books/$', views.BookListView.as_view(), name='my_book_list'),
+    re_path(r'^book/(?P<pk>\d+)$', views.BookDetailView.as_view(), name='book-detail'),
+    # path('', views.catalog, name='catalog'),
+    # path('book/<int:pk>/', views.book_detail, name='book_detail'),
     path('book/new/', views.book_new, name='book_new'),
     path('book/<int:pk>/edit/', views.book_edit, name='book_edit'),
     path("triangle/", views.triangle),

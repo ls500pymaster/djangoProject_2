@@ -1,13 +1,22 @@
 {% extends 'catalog/templates/catalog/base.html' %}
-
+{% load static %}
 {% block content %}
-    {% for book in books %}
-        <div class="post">
-            <div class="date">
-                {{ book.publication_date }}
-            </div>
-            <h1><a href="{% url 'book_detail' pk=book.pk %}">{{ book.title}}</a></h1>
-            <p>{{ book.authors.get|linebreaksbr }}</p>
-        </div>
-    {% endfor %}
+<h1>Local Library Home</h1>
+
+  <p>Welcome to <em>LocalLibrary</em>, a very basic Django website developed as a tutorial example on the Mozilla Developer Network.</p>
+
+<h2>Dynamic content</h2>
+<div class="content container">
+<div class="col-md-8">
+  <p>The library has the following record counts:</p>
+  <ul>
+    <li><strong>Books:</strong> {{ books }}</li>
+    <li><strong>Copies:</strong> {{ num_instances }}</li>
+    <li><strong>Copies available:</strong> {{ num_instances_available }}</li>
+    <li><strong>Authors:</strong> {{ authors }}</li>
+  </ul>
+</div>
+</div>
+
+
 {% endblock %}
