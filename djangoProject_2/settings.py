@@ -183,14 +183,3 @@ CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_BROKER_URL = "amqp://guest@localhost//"
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-
-# Cache
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/',
-        'OPTIONS': {
-        'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
-}
