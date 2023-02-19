@@ -41,6 +41,11 @@ class Store(models.Model):
         return f"{self.name}"
 
 
+class Quotes(models.Model):
+    quote = models.CharField(max_length=500)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+
+
 class Reminder(models.Model):
     email = models.EmailField()
     text = models.TextField()
