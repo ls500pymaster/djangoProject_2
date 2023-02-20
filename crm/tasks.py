@@ -1,6 +1,6 @@
 from time import sleep
-
 from celery import shared_task
+from celery.schedules import crontab
 from django.core.mail import send_mail
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -18,8 +18,8 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
 
 
 @shared_task(name="send_feedback_email")
-def send_feedback_email_task(name, email, subject, message):
-    sleep(1)
+def send_feedback_email_task(name, email, subject, message, remind_date_time):
+    crontab(remind_date_time)
     send_mail(
         subject,
         message,

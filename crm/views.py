@@ -1,10 +1,10 @@
-from datetime import datetime
-
+from datetime import datetime, date
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
+from django.contrib import messages
 
 options = Options()
 # Show or hide browser
@@ -96,18 +96,20 @@ def schedule_email_view(request):
         email = request.POST['email']
         subject = request.POST['subject']
         message = request.POST['message']
-        date = request.POST['date']
+        remind_date_time = request.POST['remind']
         # convert date string to datetime object
-        date = datetime.strptime(date, '%Y-%m-%dT%H:%M')
+        remind_date_time = datetime.strptime(remind_date_time, '%Y-%m-%dT%H:%M')
         # schedule email using Celery task
+        if remind_date_time < datetime.now():
+            messages.error(request, 'The email cannot be scheduled in the past')
+            return render(request, 'templates/feedback.html')
         send_feedback_email_task.apply_async(kwargs=
-                                             {"name": name, "email": email, "subject": subject, "message": message},
-                                             eta=date)
+                                                {"name": name, "email": email, "subject": subject, "message": message,
+                                                 "remind_date_time": remind_date_time})
 
         # redirect to a page that shows the user that the email was scheduled
         return redirect('crm:success')
-    else:
-        return render(request, 'templates/feedback.html')
+    return render(request, 'templates/feedback.html')
 
 
 def send_success_email(request):
@@ -137,11 +139,12 @@ def quote_scraper(request):
                 author = Author.objects.create(name=author_name)
             if not Quotes.objects.filter(quote=quote_text).exists():
                 quote = Quotes.objects.create(author_id=author.id, quote=quote_text)
-                quote.save()
                 quotes_bulk.append(quote)
                 if len(quotes_bulk) == 5:
                     Quotes.objects.bulk_create(quotes_bulk)
                     quotes_bulk.clear()
+                else:
+                    break
 
                 # quote_obj = Quotes.objects.all(author_id=author.id, quote=quote_text)
                 # # Bulk create the Quote objects:
