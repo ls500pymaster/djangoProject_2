@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 	'datetimewidget',
 	'widget_tweaks',
 	'django_celery_results',
+	'django_celery_beat',
 	'django_rq',
 ]
 
@@ -183,3 +184,4 @@ CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_BROKER_URL = "amqp://guest@localhost//"
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
