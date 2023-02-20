@@ -119,6 +119,7 @@ def error_404(request, exception):
 
 
 def quote_scraper(request):
+    quotes_bulk = []
     stop_pages = 11
     for n in (range(1, stop_pages)):
         driver.get("https://quotes.toscrape.com/page/" + str(n))
@@ -135,106 +136,14 @@ def quote_scraper(request):
                 # Create a new Author object
                 author = Author.objects.create(name=author_name)
             if not Quotes.objects.filter(quote=quote_text).exists():
-                quote_obj = Quotes.objects.all(author_id=author.id, quote=quote_text)
-                # Bulk create the Quote objects:
-                Quotes.objects.bulk_create(quote_obj)
-            return render(request, 'templates/quote_list.html')
+                quote = Quotes.objects.create(author_id=author.id, quote=quote_text)
+                quote.save()
+                quotes_bulk.append(quote)
+                if len(quotes_bulk) == 5:
+                    Quotes.objects.bulk_create(quotes_bulk)
+                    quotes_bulk.clear()
 
-
-
-
-# def quote_scraper(request):
-#     base_url = 'https://quotes.toscrape.com'
-#     url = base_url
-#     quote_list = []
-#     author_list = []
-#     while True:
-#         driver.get(url)
-#
-#         # Find all the quotes on the page
-#         quotes = driver.find_elements(by=By.CLASS_NAME, value='quote')
-#
-#         # Loop through each quote and get the text and author
-#         for quote in quotes:
-#             author_name = quote.find_element(by=By.CLASS_NAME, value='author').text
-#             quote_text = quote.find_element(by=By.CLASS_NAME, value='text').text
-#
-#             # Check if the author already exists in the database
-#             author = Author.objects.filter(name=author_name).first()
-#             if not author:
-#                 # Create a new Author object
-#                 author = Author.objects.create(name=author_name)
-#             if not Quotes.objects.filter(author_id=author.id, quote=quote_text).exists():
-#                 quote = Quotes.objects.bulk_create(Quotes(author_id=author.id, quote=quote_text))
-#                 if len(quote) == 5:
-#                     Quotes.objects.bulk_create(quote)
-#                     quote.clear()
-#
-#         return render(request, 'templates/quote_list.html', {'quote_list': quote_list, 'author_list': author_list})
-
-
-
-
-
-
-
-        # Check if there is a next page
-        # time.sleep(1)
-        # btn = driver.find_element(by=By.XPATH, value="/html/body/div/div[2]/div[1]/nav/ul/li[2]/a/text()").click()
-        # if not btn():
-        #     break
-        #
-        # # Get the URL of the next page and continue scraping
-        # url = driver.find_element(by=By.XPATH, value="/html/body/div/div[2]/div[1]/nav/ul/li[2]/a/text()").click()
-
-
-
-
-
-
-    # pages = 1
-    # quotes_bulk = []
-    # for n in tqdm(range(1, pages+1)):
-    #     driver.get("https://quotes.toscrape.com/page/" + str(n))
-    #     all_quotes = driver.find_elements(by=By.CLASS_NAME, value='quote')
-    #     for quote_element in all_quotes:
-    #         author_name = quote_element.find_element(by=By.CLASS_NAME, value='author').text
-    #         quote_text = quote_element.find_element(by=By.CLASS_NAME, value='text').text
-    #         # Check if the author already exists in the database
-    #         author = Author.objects.filter(name=author_name).first()
-    #         if not author:
-    #             # Create a new Author object
-    #             author = Author.objects.create(name=author_name)
-    #         # Check if the quote already exists in the database
-    #         if not Quotes.objects.filter(author=author, quote=quote_text).exists():
-    #             quote = Quotes.objects.create(author=author, quote=quote_text)
-    #             quote.save()
-    #             quotes_bulk.append(quote)
-    #             if len(quotes_bulk) == 5:
-    #                 Quotes.objects.bulk_create(quotes_bulk)
-    #                 quotes_bulk.clear()
-
-
-                    # If the quote doesn't exist, create a new Quotes object and save it to the database
-                    # quote = Quotes.objects.create(author=author, quote=quote_text)
-
-
-
-    # all_quotes = driver.find_elements(by=By.CLASS_NAME, value='quote')
-    # for quote_element in all_quotes:
-    #     author_name = quote_element.find_element(by=By.CLASS_NAME, value='author').text
-    #     quote_text = quote_element.find_element(by=By.CLASS_NAME, value='text').text
-    #
-    #     # Check if the author already exists in the database
-    #     author = Author.objects.filter(name=author_name).first()
-    #     if not author:
-    #         # Create a new Author object
-    #         author = Author.objects.create(name=author_name)
-    #
-    #     # Check if the quote already exists in the database
-    #     if not Quotes.objects.filter(author=author, quote=quote_text).exists():
-    #         # If the quote doesn't exist, create a new Quotes object and save it to the database
-    #         quote = Quotes.objects.create(author=author, quote=quote_text)
-    #         quote.save()
-
-
+                # quote_obj = Quotes.objects.all(author_id=author.id, quote=quote_text)
+                # # Bulk create the Quote objects:
+                # Quotes.objects.bulk_create(quote_obj)
+            return render(request, 'templates/quote_list.html', {'quotes_bulk': quotes_bulk})
