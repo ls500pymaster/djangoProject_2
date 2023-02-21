@@ -1,9 +1,12 @@
+import random
 from datetime import datetime, date
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support import expected_conditions as ec
 from django.contrib import messages
 
 options = Options()
@@ -102,11 +105,9 @@ def schedule_email_view(request):
         # schedule email using Celery task
         if remind_date_time < datetime.now():
             messages.error(request, 'The email cannot be scheduled in the past')
-            return render(request, 'templates/feedback.html')
         send_feedback_email_task.apply_async(kwargs=
                                                 {"name": name, "email": email, "subject": subject, "message": message,
                                                  "remind_date_time": remind_date_time})
-
         # redirect to a page that shows the user that the email was scheduled
         return redirect('crm:success')
     return render(request, 'templates/feedback.html')
@@ -121,32 +122,40 @@ def error_404(request, exception):
 
 
 def quote_scraper(request):
-    quotes_bulk = []
-    stop_pages = 11
-    for n in (range(1, stop_pages)):
-        driver.get("https://quotes.toscrape.com/page/" + str(n))
-        # Obj with quotes
-        all_quotes = driver.find_elements(by=By.CLASS_NAME, value='quote')
+    author_name_bulk = []
 
-        for quote_element in all_quotes:
-            author_name = quote_element.find_element(by=By.CLASS_NAME, value='author').text
-            quote_text = quote_element.find_element(by=By.CLASS_NAME, value='text').text
+    task_status = True
+    stop_pages = 2
+    while task_status:
+        for n in (range(1, stop_pages)):
+            driver.get("https://quotes.toscrape.com/page/" + str(n))
+            # Find all quotes
+            all_quotes = driver.find_elements(by=By.CLASS_NAME, value='quote')
+            # For cycle to get all text from all objects
+            for quote_element in all_quotes:
+                author_bulk = []
+                quotes_bulk = []
 
-            # Check if the author already exists in the database
-            author = Author.objects.filter(name=author_name).first()
-            if not author:
-                # Create a new Author object
-                author = Author.objects.create(name=author_name)
-            if not Quotes.objects.filter(quote=quote_text).exists():
-                quote = Quotes.objects.create(author_id=author.id, quote=quote_text)
-                quotes_bulk.append(quote)
-                if len(quotes_bulk) == 5:
-                    Quotes.objects.bulk_create(quotes_bulk)
-                    quotes_bulk.clear()
+                author_name = quote_element.find_element(by=By.CLASS_NAME, value='author').text
+                quote_text = quote_element.find_element(by=By.CLASS_NAME, value='text').text
+                # Check if author in db
+                author_check = Author.objects.filter(name=author_name).exists()
+                # if author not exists - create
+                if not author_check:
+                    author_create = Author.objects.create(name=author_name)
+
+                    author_bulk.append(author_create)
                 else:
-                    break
+                    # if quote not exists - create
+                    if not Quotes.objects.filter(quote=quote_text).exists():
+                        author_id = Author.objects.filter(name=author_name).first()
+                        quote_create = Quotes.objects.create(author_id=author_id.id, quote=quote_text)
 
-                # quote_obj = Quotes.objects.all(author_id=author.id, quote=quote_text)
-                # # Bulk create the Quote objects:
-                # Quotes.objects.bulk_create(quote_obj)
-            return render(request, 'templates/quote_list.html', {'quotes_bulk': quotes_bulk})
+                        quotes_bulk.append(quote_create)
+                if len(quotes_bulk) == 5:
+                    quote_create = Quotes.objects.bulk_create(author_bulk, quotes_bulk)
+                    # break for quote_element loop
+                    break
+        task_status = False
+
+    return render(request, 'templates/quote_list.html')
