@@ -7,19 +7,19 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
-options = Options()
-# Show or hide browser
-options.headless = True
-# disable webrdiver-mode:
-options.add_argument('--disable-blink-features=AutomationControlled')
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
-                          options=options,
-                          )
+# options = Options()
+# # Show or hide browser
+# options.headless = True
+# # disable webrdiver-mode:
+# options.add_argument('--disable-blink-features=AutomationControlled')
+# driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
+#                           options=options,
+#                           )
 
 
 @shared_task(name="send_feedback_email")
-def send_feedback_email_task(name, email, subject, message, remind_date_time):
-    crontab(remind_date_time)
+def send_feedback_email_task(name, email, subject, message):
+    # crontab(remind_date_time)
     send_mail(
         subject,
         message,

@@ -42,7 +42,7 @@ class Store(models.Model):
 
 
 class Quotes(models.Model):
-    quote = models.CharField(max_length=500, null=True, blank=True)
+    text = models.CharField(max_length=500, null=True, blank=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
 
 

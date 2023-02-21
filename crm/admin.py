@@ -60,5 +60,5 @@ class StoreAdmin(admin.ModelAdmin):
 
 @admin.register(Quotes)
 class QuotesAdmin(admin.ModelAdmin):
-	list_display = ("author", "quote",)
+	list_display = ("author",)
 	list_per_page = 20
