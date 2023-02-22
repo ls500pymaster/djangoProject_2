@@ -1,9 +1,27 @@
-from datetime import datetime
+import time
+from datetime import datetime, timedelta
 
+from django.contrib import messages
+from django.core.mail import send_mail
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
+
+options = Options()
+# Show or hide browser
+options.headless = True
+
+# disable webrdiver-mode:
+options.add_argument('--disable-blink-features=AutomationControlled')
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
+                          options=options,
+                          )
 from django.db.models import Count, Avg, Max, Min
 from django.shortcuts import render, get_object_or_404, redirect
 
-from crm.models import Author, Publisher, Book, Store
+from crm.models import Author, Publisher, Book, Store, Quotes
 # from .forms import FeedbackForm, ScheduleEmailForm
 from .tasks import send_feedback_email_task
 
@@ -81,17 +99,26 @@ def schedule_email_view(request):
         email = request.POST['email']
         subject = request.POST['subject']
         message = request.POST['message']
-        date = request.POST['date']
+        remind_date_time = request.POST['remind']
         # convert date string to datetime object
-        date = datetime.strptime(date, '%Y-%m-%dT%H:%M')
+        remind_date_time = datetime.strptime(remind_date_time, '%Y-%m-%dT%H:%M')
         # schedule email using Celery task
-        send_feedback_email_task.apply_async(kwargs=
-                                             {"name": name, "email": email, "subject": subject, "message": message}, eta=date)
+        if remind_date_time - datetime.now() > timedelta(days=2):
+            send_feedback_email_task.apply_async(kwargs=
+                                                 {"name": name,
+                                                  "email": email,
+                                                  "subject": subject,
+                                                  "message": message}, eta=remind_date_time)
+            # redirect to a page that shows the user that the email was scheduled
+            return redirect('crm:success')
+        else:
+            messages.info(request, 'Time must be 2 days ahead.')
 
-        # redirect to a page that shows the user that the email was scheduled
-        return redirect('crm:success')
-    else:
-        return render(request, 'templates/feedback.html')
+    return render(request, 'templates/feedback.html')
+
+
+def feedback_error(request):
+    return render(request, 'templates/feedback_error.html')
 
 
 def send_success_email(request):
@@ -100,5 +127,108 @@ def send_success_email(request):
 
 def error_404(request, exception):
     return render(request, 'templates/404.html')
+
+
+def quote_scraper(request, max_quotes=100):
+    # driver.get("https://quotes.toscrape.com/page/1/")
+    # counter = 0
+    # while counter < max_quotes:
+    #     for quote_element in driver.find_elements(by=By.CLASS_NAME, value='quote')[0:5]:
+    #         author_name = quote_element.find_element(by=By.CLASS_NAME, value='author').text
+    #         text = quote_element.find_element(by=By.CLASS_NAME, value='text').text
+    #         author, _ = Author.objects.get_or_create(name=author_name)
+    #         quote, _ = Quotes.objects.get_or_create(text=text, author=author)
+    #         counter += 1
+    #         time.sleep(1)
+    #         if counter >= max_quotes:
+    #             break
+    #     print(f"Added {counter} quotes")
+    #     if counter >= max_quotes:
+    #         send_mail(
+    #             'Quote Scraper Done',
+    #             f'The quote scraper has added {counter} quotes to the database',
+    #             'sender@example.com',
+    #             ['recipient@example.com'],
+    #             fail_silently=False,
+    #         )
+    #         break
+    #     time.sleep(1)
+    #     driver.find_element(by=By.CSS_SELECTOR, value='li.next a').click()
+
+    return render(request, 'templates/quote_list.html')
+
+
+
+# def quote_scraper(request, max_quotes=7):
+#     driver.get("https://quotes.toscrape.com/page/1/")
+#     for quote_element in driver.find_elements(by=By.CLASS_NAME, value='quote')[0:5]:
+#         counter = 0
+#         while counter != 5:
+#             author_name = quote_element.find_element(by=By.CLASS_NAME, value='author').text
+#             text = quote_element.find_element(by=By.CLASS_NAME, value='text').text
+#             author, _ = Author.objects.get_or_create(name=author_name)
+#             if not Quotes.objects.filter(text=text).exists():
+#                 quote, _ = Quotes.objects.get_or_create(text=text, author=author)
+#             counter += 1
+#     return render(request, 'templates/quote_list.html')
+
+
+# def quote_scraper(request):
+#     author_name_bulk = []
+#
+#     task_status = True
+#     stop_pages = 2
+#     while task_status:
+#         for n in (range(1, stop_pages)):
+#             driver.get("https://quotes.toscrape.com/page/" + str(n))
+#             # Find all quotes
+#             all_quotes = driver.find_elements(by=By.CLASS_NAME, value='quote')
+#             # For cycle to get all text from all objects
+#             for quote_element in all_quotes:
+#                 author_bulk = set()
+#                 quotes_bulk = []
+#                 author_name = quote_element.find_element(by=By.CLASS_NAME, value='author').text
+#                 quote_text = quote_element.find_element(by=By.CLASS_NAME, value='text').text
+#
+#                 # Check if author in db
+#                 author_check = Author.objects.filter(name=author_name).exists()
+#                 quote_check = Quotes.objects.filter(text=quote_text).exists()
+#
+#                 if author_check:
+#                     print("author exists")
+#                     if quote_check:
+#                         print("Quote exists")
+#
+#
+#     return render(request, 'templates/quote_list.html')
+
+
+
+
+
+
+
+                #
+                #
+                # else:
+                #     print("This is ELSE condition if quote not exists")
+                #     if not Quotes.objects.filter(quote=quote_text).exists():
+                #         print("Quote CREATE object")
+                #         time.sleep(1)
+                #         author_id = Author.objects.filter(name=author_name).first()
+                #         # Create object with quote: author id and quote text
+                #         quote_create = Quotes.objects.create(author_id=author_id.id, quote=quote_text)
+                #         # Add this quote to bulk list
+                #         quotes_bulk.append(Quotes(quote_create))
+                #         print(f"Added to bulk {quotes_bulk}")
+                #         time.sleep(1)
+                #     break
+                    # if len(quotes_bulk) == 2:
+                    #     print("this is len block == 2")
+                    #     quote_create = Quotes.objects.bulk_create(author_bulk, quotes_bulk)
+                    #     # break for quote_element loop
+                    #     print("We used bulk create")
+                    #     break
+
 
 
