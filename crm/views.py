@@ -2,8 +2,6 @@ from datetime import datetime
 
 from django.db.models import Count, Avg, Max, Min
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic.base import TemplateView
-from django.views.generic.edit import FormView
 
 from crm.models import Author, Publisher, Book, Store
 # from .forms import FeedbackForm, ScheduleEmailForm
