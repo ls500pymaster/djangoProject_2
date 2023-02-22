@@ -21,6 +21,7 @@ urlpatterns = [
 
     path("feedback/", views.schedule_email_view, name="feedback"),
     path("feedback/success/", views.send_success_email, name="success"),
+    path("feedback/error/", views.feedback_error, name="feedback_error"),
 
     path("scraper/", views.quote_scraper, name="quote_scraper"),
 ]

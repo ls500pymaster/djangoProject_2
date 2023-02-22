@@ -1,0 +1,22 @@
+{% extends 'templates/base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% block content %}
+
+    <h2>Schedule Email Feedback</h2>
+    <p>Please send us your feedback.</p>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock content %}
+

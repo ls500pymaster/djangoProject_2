@@ -1,4 +1,6 @@
 import os
+from datetime import timedelta
+
 from celery import Celery
 from django.conf import settings
 from celery.schedules import crontab
@@ -16,17 +18,8 @@ app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 app.conf.beat_schedule = {
     # Scraper
-    'quote-scraper-three-hours-daily': {
-        # Task Name Specified in Decorator
-        'task': 'quotes_scraper',
-        # Schedule
-        'schedule': crontab(minute="*/1"),
-        # Function Arguments
-        # 'args': ("Hello",)
+    'scrape-quotes-every-3-hours': {
+        'task': 'myapp.tasks.quote_scraper',
+        'schedule': timedelta(hours=3),
     },
 }
-
-
-@app.task(bind=True)
-def debug_task(self):
-    print(f'Request: {self.request!r}')

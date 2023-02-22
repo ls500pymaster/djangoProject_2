@@ -1,19 +1,13 @@
-import random
 import time
-from datetime import datetime, date
+from datetime import datetime, timedelta
 
-from bs4 import BeautifulSoup
-from django.contrib.sites import requests
+from django.contrib import messages
 from django.core.mail import send_mail
-from django.db import transaction
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.support import expected_conditions as ec
-from django.contrib import messages
 
 options = Options()
 # Show or hide browser
@@ -109,13 +103,22 @@ def schedule_email_view(request):
         # convert date string to datetime object
         remind_date_time = datetime.strptime(remind_date_time, '%Y-%m-%dT%H:%M')
         # schedule email using Celery task
-        if remind_date_time < datetime.now():
-            messages.error(request, 'The email cannot be scheduled in the past')
-        send_feedback_email_task.apply_async(kwargs=
-                                                {"name": name, "email": email, "subject": subject, "message": message}, eta=remind_date_time)
-        # redirect to a page that shows the user that the email was scheduled
-        return redirect('crm:success')
+        if remind_date_time - datetime.now() > timedelta(days=2):
+            send_feedback_email_task.apply_async(kwargs=
+                                                 {"name": name,
+                                                  "email": email,
+                                                  "subject": subject,
+                                                  "message": message}, eta=remind_date_time)
+            # redirect to a page that shows the user that the email was scheduled
+            return redirect('crm:success')
+        else:
+            messages.info(request, 'Time must be 2 days ahead.')
+
     return render(request, 'templates/feedback.html')
+
+
+def feedback_error(request):
+    return render(request, 'templates/feedback_error.html')
 
 
 def send_success_email(request):
@@ -126,18 +129,48 @@ def error_404(request, exception):
     return render(request, 'templates/404.html')
 
 
-def quote_scraper(request, max_quotes=7):
-    driver.get("https://quotes.toscrape.com/page/1/")
-    for quote_element in driver.find_elements(by=By.CLASS_NAME, value='quote')[0:5]:
-        counter = 0
-        while counter != 5:
-            author_name = quote_element.find_element(by=By.CLASS_NAME, value='author').text
-            text = quote_element.find_element(by=By.CLASS_NAME, value='text').text
-            author, _ = Author.objects.get_or_create(name=author_name)
-            if not Quotes.objects.filter(text=text).exists():
-                quote, _ = Quotes.objects.get_or_create(text=text, author=author)
-            counter += 1
+def quote_scraper(request, max_quotes=100):
+    # driver.get("https://quotes.toscrape.com/page/1/")
+    # counter = 0
+    # while counter < max_quotes:
+    #     for quote_element in driver.find_elements(by=By.CLASS_NAME, value='quote')[0:5]:
+    #         author_name = quote_element.find_element(by=By.CLASS_NAME, value='author').text
+    #         text = quote_element.find_element(by=By.CLASS_NAME, value='text').text
+    #         author, _ = Author.objects.get_or_create(name=author_name)
+    #         quote, _ = Quotes.objects.get_or_create(text=text, author=author)
+    #         counter += 1
+    #         time.sleep(1)
+    #         if counter >= max_quotes:
+    #             break
+    #     print(f"Added {counter} quotes")
+    #     if counter >= max_quotes:
+    #         send_mail(
+    #             'Quote Scraper Done',
+    #             f'The quote scraper has added {counter} quotes to the database',
+    #             'sender@example.com',
+    #             ['recipient@example.com'],
+    #             fail_silently=False,
+    #         )
+    #         break
+    #     time.sleep(1)
+    #     driver.find_element(by=By.CSS_SELECTOR, value='li.next a').click()
+
     return render(request, 'templates/quote_list.html')
+
+
+
+# def quote_scraper(request, max_quotes=7):
+#     driver.get("https://quotes.toscrape.com/page/1/")
+#     for quote_element in driver.find_elements(by=By.CLASS_NAME, value='quote')[0:5]:
+#         counter = 0
+#         while counter != 5:
+#             author_name = quote_element.find_element(by=By.CLASS_NAME, value='author').text
+#             text = quote_element.find_element(by=By.CLASS_NAME, value='text').text
+#             author, _ = Author.objects.get_or_create(name=author_name)
+#             if not Quotes.objects.filter(text=text).exists():
+#                 quote, _ = Quotes.objects.get_or_create(text=text, author=author)
+#             counter += 1
+#     return render(request, 'templates/quote_list.html')
 
 
 # def quote_scraper(request):
