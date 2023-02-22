@@ -16,7 +16,7 @@ class Command(BaseCommand):
         Author.objects.bulk_create(
             [
                 Author(
-                    name=fake.name(), age=fake.random_int(18, 50)
+                    name=fake.name(), age=fake.random_int(18, 50), password=fake.password()
                 ) for _ in range(number_of_users)
             ]
         )

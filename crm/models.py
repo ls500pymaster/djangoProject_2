@@ -10,6 +10,14 @@ class Author(models.Model):
         return f"{self.name}"
 
 
+class AuthorProfile(models.Model):
+    author = models.OneToOneField(Author, on_delete=models.CASCADE)
+    about = models.TextField(max_length=1000, help_text="Author bio")
+
+    def __str__(self):
+        return f"{self.author.name} {self.author.age} Profile"
+
+
 class Publisher(models.Model):
     name = models.CharField(max_length=300)
 
