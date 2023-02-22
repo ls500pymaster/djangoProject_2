@@ -176,7 +176,7 @@ SHELL_PLUS_PRINT_SQL_TRUNCATE = None
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Celery Configuration Options
-CELERY_TIMEZONE = "Europe/Kiev"
+CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
