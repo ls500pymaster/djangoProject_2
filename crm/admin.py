@@ -1,5 +1,5 @@
 from django.contrib import admin
-from crm.models import Author, Book, Publisher, Store
+from crm.models import Author, Book, Publisher, Store, Quotes
 
 
 @admin.register(Author)
@@ -57,3 +57,8 @@ class StoreAdmin(admin.ModelAdmin):
 	def get_books(self, obj):
 		return list(obj.books.all().values_list("name", flat=True))
 
+
+@admin.register(Quotes)
+class QuotesAdmin(admin.ModelAdmin):
+	list_display = ("author",)
+	list_per_page = 20

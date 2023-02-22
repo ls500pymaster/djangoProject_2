@@ -130,6 +130,22 @@ To stop the service
 ` brew services stop redis
 ` 
 
+To start the celery beat
+
+` celery -A djangoProject_2 beat -l INFO
+` 
+
+To start the celery worker 
+
+` celery -A djangoProject_2 worker -l INFO
+` 
+
+Clean queue
+
+` celery -A djangoProject_2 purge  
+` 
+
+
 # Create a regular user 'foo'
 >>> user = User.objects.create_user('foo', 'foo.bar@xxx.com', 'bar')
 
