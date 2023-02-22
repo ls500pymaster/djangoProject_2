@@ -1,3 +1,4 @@
+from django.template.defaulttags import url
 from django.urls import path
 
 from . import views
@@ -7,8 +8,9 @@ app_name = 'crm'
 
 urlpatterns = [
     path('', views.index_crm, name='index_crm'),
-    path('authors/', views.get_all_authors, name='get_all_authors'),
-    path('authors/<name>/', views.get_author_object, name='get_author_object'),
+    # path('authors/', views.get_all_authors, name='get_all_authors'),
+    path('authors/', views.AuthorListView.as_view(), name='authors'),
+    # path('authors/<name>/', views.get_author_object, name='get_author_object'),
 
     path('publishers/', views.get_all_publishers, name='publishers_all'),
     path('publishers/<pk>/', views.get_publisher_object, name='get_publisher_object'),

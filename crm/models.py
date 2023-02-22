@@ -1,13 +1,24 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class Author(models.Model):
-    name = models.CharField(max_length=300)
-    age = models.IntegerField()
+    name = models.CharField(_("first name"), max_length=100)
+    age = models.IntegerField(blank=True)
     password = models.CharField(max_length=100)
+    date_of_birth = models.DateField(_("date of birth"), null=True, blank=True)
+    date_of_death = models.DateField(_("date of death"), null=True, blank=True)
 
     def __str__(self):
         return f"{self.name}"
+
+
+class AuthorProfile(models.Model):
+    author = models.OneToOneField("Author", on_delete=models.CASCADE)
+    about = models.TextField(_("about"), max_length=1000, help_text=_("Author bio"), null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.author.name} {self.author.date_of_birth} Profile"
 
 
 class Publisher(models.Model):

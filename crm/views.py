@@ -1,12 +1,11 @@
 from datetime import datetime
 
 from django.db.models import Count, Avg, Max, Min
+from django.views.generic import ListView
+from django.views import generic
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic.base import TemplateView
-from django.views.generic.edit import FormView
 
 from crm.models import Author, Publisher, Book, Store
-# from .forms import FeedbackForm, ScheduleEmailForm
 from .tasks import send_feedback_email_task
 
 
@@ -22,10 +21,18 @@ def index_crm(request):
                                                     'author_max_age': author_max_age})
 
 
-def get_all_authors(request):
-    authors_all = Author.objects.all()
-    young_authors = Author.objects.annotate(Min("age")).filter(age__lte=16)
-    return render(request, 'templates/author_list.html', {'authors_all': authors_all, 'young_authors': young_authors})
+class AuthorListView(generic.ListView):
+    model = Author
+    paginate_by = 5
+    template_name = "templates/author_list.html"
+    def get_queryset(self):
+        return super(AuthorListView, self).get_queryset().all()
+
+
+# def get_all_authors(request):
+#     authors_all = Author.objects.all()
+#     young_authors = Author.objects.annotate(Min("age")).filter(age__lte=16)
+#     return render(request, 'templates/author_list.html', {'authors_all': authors_all, 'young_authors': young_authors})
 
 
 def get_author_object(request, name):

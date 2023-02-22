@@ -1,41 +1,31 @@
 {% extends 'templates/base.html' %}
 {% load bootstrap_icons %}
+{% block br_cr %}{{ block.super }}/<a href="{% url 'authors' %}">Authors list</a>{% endblock %}
 {% block content %}
+
+
     <div class="container">
       <table id="data" class="table table-striped">
-    <thead>
-      <tr>
-        <th>Young Author</th>
-          <th>Age</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for author in young_authors %}
-        <tr>
-            <td><a href="{{ author.name }}">{{ author }}</a></td>
-        <td>{{ author.age }}</td>
-        </tr>
+  {% if author_list %}
+    <ul>
+
+      {% for author in author_list %}
+        <li>
+          <a href="{{ author.get_absolute_url }}">
+            {{ author }} ({{ author.date_of_birth }} -
+            {% if author.date_of_death %}{{ author.date_of_death }}{% endif %})
+          <p>{{ author.authorprofile.about }}</p>
+          </a>
+        </li>
       {% endfor %}
+
+    </ul>
+  {% else %}
+    <p>There are no authors available.</p>
+  {% endif %}
     </tbody>
   </table>
-    </div>
-    <div class="container">
-      <table id="data" class="table table-striped">
-    <thead>
-      <tr>
-        <th>Name</th>
-          <th>Age</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for author in authors_all %}
-        <tr>
-            <td><a href="{{ author.name }}">{{ author }}</a></td>
-        <td>{{ author.age }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    {% include "templates/pagination.html" with page=page_obj %}
     {% endblock %}
     </div>
 
