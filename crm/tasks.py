@@ -42,6 +42,7 @@ def send_feedback_email_task(name, email, subject, message):
     )
 
 
+# This task is running by celery.py.conf.beat_schedule
 @shared_task(name="quotes_scraper")
 def quote_scraper():
     page_number = 1
