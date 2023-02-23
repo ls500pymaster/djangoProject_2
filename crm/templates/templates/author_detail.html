@@ -1,23 +1,23 @@
 {% extends 'templates/base.html' %}
 {% load bootstrap_icons %}
 {% block content %}
+
       <table id="data" class="table table-striped">
     <thead>
       <tr>
-        <th>Name of the book</th>
         <th>Author</th>
-          <th>Publishers</th>
+        <th>Age</th>
       </tr>
     </thead>
     <tbody>
-      {% for author in get_author_books %}
-        <tr>
-          <td>{{ author.name }}</td>
-        <td>{{ get_author }}</td>
-        <td>{{ author.publisher }}</td>
+          <td>{{ author_detail.name }}</td>
+        <td>{{ author_detail.age }}</td>
         </tr>
-      {% endfor %}
     </tbody>
   </table>
-    {% endblock %}
+   <div class="btn-group">
+       <a href="{% url 'crm:author_update' object.id %}" class="btn btn-secondary">Update</a>
+      <a href="{% url 'crm:author_delete' object.id %}" class="btn btn-danger">Delete</a>
     </div>
+    {% endblock %}
+

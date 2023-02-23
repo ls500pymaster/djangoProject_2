@@ -1,25 +1,11 @@
-import time
 from datetime import datetime, timedelta
 
 from django.contrib import messages
-from django.core.mail import send_mail
-from selenium import webdriver
+from django.urls import reverse_lazy
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
-
-options = Options()
-# Show or hide browser
-options.headless = True
-
-# disable webrdiver-mode:
-options.add_argument('--disable-blink-features=AutomationControlled')
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
-                          options=options,
-                          )
-from django.db.models import Count, Avg, Max, Min
-from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from crm.models import Author, Book, Publisher, Store
+from django.db.models import Count, Avg, Max
 from django.views import generic
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -40,39 +26,58 @@ def index_crm(request):
 
 class AuthorListView(generic.ListView):
     model = Author
-    paginate_by = 5
+    context_object_name = 'author_list'
+    paginate_by = 20
     template_name = "templates/author_list.html"
+
     def get_queryset(self):
-        return super(AuthorListView, self).get_queryset().all()
+        return super(AuthorListView, self).get_queryset()
 
 
-# def get_all_authors(request):
-#     authors_all = Author.objects.all()
-#     young_authors = Author.objects.annotate(Min("age")).filter(age__lte=16)
-#     return render(request, 'templates/author_list.html', {'authors_all': authors_all, 'young_authors': young_authors})
+class AuthorDetailView(generic.DetailView):
+    model = Author
+    context_object_name = 'author_detail'
+    template_name = "templates/author_detail.html"
 
 
-def get_author_object(request, name):
-    get_author = Author.objects.filter(book__authors__name=name)
-    get_object_or_404(Author, name=name)
-    get_author_books = Book.objects.filter(authors__name=name).select_related("publisher").order_by("authors__age")
-    return render(request, 'templates/author_detail.html', {'get_author_books': get_author_books,
-                                                         'get_author': get_author[0]})
+class AuthorCreate(PermissionRequiredMixin, generic.CreateView):
+    model = Author
+    fields = ["name", "age"]
+    template_name = "templates/author_form.html"
+    permission_required = "catalog.can_mark_returned"
+    success_url = reverse_lazy("crm:author_list")
 
 
-def get_all_publishers(request):
-    publishers_all = Publisher.objects.annotate(num_books=Count('book', distinct=True)).filter(book__rating__gt=5)
-    publisher_count = Publisher.objects.aggregate(publisher_count=Count("name"))['publisher_count']
-    return render(request, 'templates/publisher_list.html', {'publishers_all': publishers_all,
-                                                             'publisher_count': publisher_count})
+class AuthorUpdate(PermissionRequiredMixin, generic.UpdateView):
+    model = Author
+    fields = ["name", "age"]
+    template_name = "templates/author_form.html"
+    permission_required = "catalog.can_mark_returned"
+    success_url = reverse_lazy("crm:author_list")
 
 
-def get_publisher_object(request, pk):
-    publisher_name = Publisher.objects.filter(name__exact=pk)
-    count_publishers = Publisher.objects.select_related("publisher").filter(name__contains=pk[0],
-                                                                            name__endswith=pk[-1]).count()
-    return render(request, 'templates/publisher_detail.html', {'publisher_name': publisher_name,
-                                                            'count_publishers': count_publishers})
+class AuthorDelete(PermissionRequiredMixin, generic.DeleteView):
+    model = Author
+    template_name = "templates/author_confirm_delete.html"
+    permission_required = "catalog.can_mark_returned"
+    success_url = reverse_lazy("crm:author_list")
+
+
+class PublisherListView(generic.ListView):
+    model = Publisher
+    context_object_name = 'publisher_list'
+    paginate_by = 10
+    template_name = "templates/publisher_list.html"
+
+    def get_queryset(self):
+        return super(PublisherListView, self).get_queryset()
+
+
+class PublisherDetailView(generic.DetailView):
+    model = Publisher
+    context_object_name = "publisher_detail"
+    paginate_by = 5
+    template_name = "templates/publisher_detail.html"
 
 
 def get_all_books(request):
@@ -137,106 +142,31 @@ def error_404(request, exception):
     return render(request, 'templates/404.html')
 
 
-def quote_scraper(request, max_quotes=100):
-    # driver.get("https://quotes.toscrape.com/page/1/")
-    # counter = 0
-    # while counter < max_quotes:
-    #     for quote_element in driver.find_elements(by=By.CLASS_NAME, value='quote')[0:5]:
-    #         author_name = quote_element.find_element(by=By.CLASS_NAME, value='author').text
-    #         text = quote_element.find_element(by=By.CLASS_NAME, value='text').text
-    #         author, _ = Author.objects.get_or_create(name=author_name)
-    #         quote, _ = Quotes.objects.get_or_create(text=text, author=author)
-    #         counter += 1
-    #         time.sleep(1)
-    #         if counter >= max_quotes:
-    #             break
-    #     print(f"Added {counter} quotes")
-    #     if counter >= max_quotes:
-    #         send_mail(
-    #             'Quote Scraper Done',
-    #             f'The quote scraper has added {counter} quotes to the database',
-    #             'sender@example.com',
-    #             ['recipient@example.com'],
-    #             fail_silently=False,
-    #         )
-    #         break
-    #     time.sleep(1)
-    #     driver.find_element(by=By.CSS_SELECTOR, value='li.next a').click()
-
-    return render(request, 'templates/quote_list.html')
+# def get_all_authors(request):
+#     authors_all = Author.objects.all()
+#     young_authors = Author.objects.annotate(Min("age")).filter(age__lte=16)
+#     return render(request, 'templates/author_list.html', {'authors_all': authors_all, 'young_authors': young_authors})
 
 
-
-# def quote_scraper(request, max_quotes=7):
-#     driver.get("https://quotes.toscrape.com/page/1/")
-#     for quote_element in driver.find_elements(by=By.CLASS_NAME, value='quote')[0:5]:
-#         counter = 0
-#         while counter != 5:
-#             author_name = quote_element.find_element(by=By.CLASS_NAME, value='author').text
-#             text = quote_element.find_element(by=By.CLASS_NAME, value='text').text
-#             author, _ = Author.objects.get_or_create(name=author_name)
-#             if not Quotes.objects.filter(text=text).exists():
-#                 quote, _ = Quotes.objects.get_or_create(text=text, author=author)
-#             counter += 1
-#     return render(request, 'templates/quote_list.html')
+# def get_author_object(request, name):
+#     get_author = Author.objects.filter(book__authors__name=name)
+#     get_object_or_404(Author, name=name)
+#     get_author_books = Book.objects.filter(authors__name=name).select_related("publisher").order_by("authors__age")
+#     return render(request, 'templates/author_detail.html', {'get_author_books': get_author_books,
+#                                                          'get_author': get_author[0]})
 
 
-# def quote_scraper(request):
-#     author_name_bulk = []
-#
-#     task_status = True
-#     stop_pages = 2
-#     while task_status:
-#         for n in (range(1, stop_pages)):
-#             driver.get("https://quotes.toscrape.com/page/" + str(n))
-#             # Find all quotes
-#             all_quotes = driver.find_elements(by=By.CLASS_NAME, value='quote')
-#             # For cycle to get all text from all objects
-#             for quote_element in all_quotes:
-#                 author_bulk = set()
-#                 quotes_bulk = []
-#                 author_name = quote_element.find_element(by=By.CLASS_NAME, value='author').text
-#                 quote_text = quote_element.find_element(by=By.CLASS_NAME, value='text').text
-#
-#                 # Check if author in db
-#                 author_check = Author.objects.filter(name=author_name).exists()
-#                 quote_check = Quotes.objects.filter(text=quote_text).exists()
-#
-#                 if author_check:
-#                     print("author exists")
-#                     if quote_check:
-#                         print("Quote exists")
-#
-#
-#     return render(request, 'templates/quote_list.html')
+# def get_all_publishers(request):
+#     publishers_all = Publisher.objects.annotate(num_books=Count('book', distinct=True)).filter(book__rating__gt=5)
+#     publisher_count = Publisher.objects.aggregate(publisher_count=Count("name"))['publisher_count']
+#     return render(request, 'templates/publisher_list.html', {'publishers_all': publishers_all,
+#                                                              'publisher_count': publisher_count})
 
 
-
-
-
-
-
-                #
-                #
-                # else:
-                #     print("This is ELSE condition if quote not exists")
-                #     if not Quotes.objects.filter(quote=quote_text).exists():
-                #         print("Quote CREATE object")
-                #         time.sleep(1)
-                #         author_id = Author.objects.filter(name=author_name).first()
-                #         # Create object with quote: author id and quote text
-                #         quote_create = Quotes.objects.create(author_id=author_id.id, quote=quote_text)
-                #         # Add this quote to bulk list
-                #         quotes_bulk.append(Quotes(quote_create))
-                #         print(f"Added to bulk {quotes_bulk}")
-                #         time.sleep(1)
-                #     break
-                    # if len(quotes_bulk) == 2:
-                    #     print("this is len block == 2")
-                    #     quote_create = Quotes.objects.bulk_create(author_bulk, quotes_bulk)
-                    #     # break for quote_element loop
-                    #     print("We used bulk create")
-                    #     break
-
-
+# def get_publisher_object(request, pk):
+#     publisher_name = Publisher.objects.filter(name__exact=pk)
+#     count_publishers = Publisher.objects.select_related("publisher").filter(name__contains=pk[0],
+#                                                                             name__endswith=pk[-1]).count()
+#     return render(request, 'templates/publisher_detail.html', {'publisher_name': publisher_name,
+#                                                             'count_publishers': count_publishers})
 

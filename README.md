@@ -54,6 +54,13 @@ Debug mode False, because I need to load statics for custom 404 error page
 ` http://127.0.0.1:8000/crm/
 ` CRM app. Using annotate, aggregate, prefetch related, select related
 
+### Django CRM Class-based views
+` http://127.0.0.1:8000/crm/authors/
+`
+CRM app. You can create/update/delete/view authors.
+generic.DeleteView and PermissionRequiredMixin used to generate urls by Models
+
+
 #### ### Graph_models
 
 To group all the application and output into PNG file
