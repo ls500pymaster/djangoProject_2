@@ -26,9 +26,9 @@ options.headless = True
 
 # disable webrdiver-mode:
 options.add_argument('--disable-blink-features=AutomationControlled')
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
-                          options=options,
-                          )
+# driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
+#                           options=options,
+#                           )
 
 
 @shared_task(name="send_feedback_email")

@@ -16,10 +16,10 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 
-app.conf.beat_schedule = {
-    # Scraper
-    'scrape-quotes-every-3-hours': {
-        'task': 'myapp.tasks.quote_scraper',
-        'schedule': timedelta(hours=3),
-    },
-}
+# app.conf.beat_schedule = {
+#     # Scraper
+#     'scrape-quotes-every-3-hours': {
+#         'task': 'myapp.tasks.quote_scraper',
+#         'schedule': timedelta(hours=3),
+#     },
+# }

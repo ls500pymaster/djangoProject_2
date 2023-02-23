@@ -1,32 +1,25 @@
 {% extends 'templates/base.html' %}
 {% load bootstrap_icons %}
-{% block br_cr %}{{ block.super }}/<a href="{% url 'authors' %}">Authors list</a>{% endblock %}
+{% block br_cr %}{{ block.super }}/<a href="{% url 'crm:author_list' %}">Authors list</a>{% endblock %}
 {% block content %}
 
-
-    <div class="container">
       <table id="data" class="table table-striped">
-  {% if author_list %}
-    <ul>
-
+    <thead>
+      <tr>
+        <th>Name of the book</th>
+        <th>Author</th>
+      </tr>
+    </thead>
+    <tbody>
       {% for author in author_list %}
-        <li>
-          <a href="{{ author.get_absolute_url }}">
-            {{ author }} ({{ author.date_of_birth }} -
-            {% if author.date_of_death %}{{ author.date_of_death }}{% endif %})
-          <p>{{ author.authorprofile.about }}</p>
-          </a>
-        </li>
+        <tr>
+        <td> <a href="{% url 'crm:author_detail' pk=author.pk %}"> {{ author.name }}</a> </td>
+        <td>{{ author.age }}</td>
+        </tr>
       {% endfor %}
-
-    </ul>
-  {% else %}
-    <p>There are no authors available.</p>
-  {% endif %}
     </tbody>
   </table>
+
     {% include "templates/pagination.html" with page=page_obj %}
     {% endblock %}
     </div>
-
-
