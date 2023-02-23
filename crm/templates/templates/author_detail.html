@@ -10,14 +10,14 @@
       </tr>
     </thead>
     <tbody>
-        <tr>
           <td>{{ author_detail.name }}</td>
         <td>{{ author_detail.age }}</td>
         </tr>
-
     </tbody>
   </table>
-
-  </table>
-    {% endblock %}
+   <div class="btn-group">
+       <a href="{% url 'crm:author_update' object.id %}" class="btn btn-secondary">Update</a>
+      <a href="{% url 'crm:author_delete' object.id %}" class="btn btn-danger">Delete</a>
     </div>
+    {% endblock %}
+

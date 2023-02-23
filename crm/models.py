@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 
@@ -7,6 +8,9 @@ class Author(models.Model):
     age = models.IntegerField(null=True, blank=True)
     password = models.CharField(max_length=100, blank=True, null=True)
 
+    def get_absolute_url(self):
+        return reverse("crm:author_list", args=[str(self.id)])
+
     def __str__(self):
         return f"{self.name}"
 
@@ -14,6 +18,9 @@ class Author(models.Model):
 class AuthorProfile(models.Model):
     author = models.OneToOneField(Author, on_delete=models.CASCADE)
     about = models.TextField(max_length=1000, help_text="Author bio")
+
+    def get_absolute_url(self):
+        return reverse("crm:author_detail", args=[str(self.id)])
 
     def __str__(self):
         return f"{self.author.name} {self.author.age} Profile"
