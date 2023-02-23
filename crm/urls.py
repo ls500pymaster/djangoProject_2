@@ -11,7 +11,7 @@ app_name = 'crm'
 urlpatterns = [
     path('', views.index_crm, name='index_crm'),
     path('authors/', AuthorListView.as_view(), name='author_list'),
-    path("author/<int:pk>/", AuthorDetailView.as_view(), name="author_detail"),
+    path("authors/<int:pk>/", AuthorDetailView.as_view(), name="author_detail"),
 
     path("author/create/", AuthorCreate.as_view(), name="author_create"),
     path("author/<int:pk>/update/", AuthorUpdate.as_view(), name="author_update"),
