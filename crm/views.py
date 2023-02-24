@@ -1,27 +1,53 @@
 from datetime import datetime, timedelta
 
 from django.contrib import messages
-from django.urls import reverse_lazy
-from selenium.webdriver.chrome.options import Options
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from crm.models import Author, Book, Publisher, Store
-from django.db.models import Count, Avg, Max
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.cache import cache
+from django.db.models import Count, Avg, Max, Min
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.views import generic
-from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.cache import cache_page
 
-from .tasks import send_feedback_email_task
+from crm.models import Author, Book, Publisher, Store
+from djangoProject_2 import settings
+# from crm.tasks import send_feedback_email_task
+
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 
-def index_crm(request):
-    total_authors = Author.objects.aggregate(book_count=Count("book"))['book_count']
-    average_price = Book.objects.aggregate(Avg("price"))["price__avg"]
-    average_pages = Book.objects.aggregate(Avg("pages"))["pages__avg"]
-    author_max_age = Author.objects.aggregate(Max("age"))["age__max"]
-    # author = Author.objects.filter(age__gte=20, age__lte=30)
-    return render(request, 'templates/index.html', {'total_authors': total_authors,
-                                                    'average_price': average_price,
-                                                    'average_pages': average_pages,
-                                                    'author_max_age': author_max_age})
+# Before cache 15 queries in 30.96ms
+# After cache 1 query in 0.78ms
+
+class IndexView(generic.ListView):
+    model = Book
+    context_object_name = 'book_list'
+    paginate_by = 5000
+    template_name = "templates/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["total_authors"] = Author.objects.aggregate(book_count=Count("book"))['book_count']
+        context["average_price"] = Book.objects.aggregate(Avg("price"))["price__avg"]
+        context["average_pages"] = Book.objects.aggregate(Avg("pages"))["pages__avg"]
+        context["author_max_age"] = Author.objects.aggregate(Max("age"))["age__max"]
+        return context
+
+# def index_crm(request):
+#     total_authors = Author.objects.aggregate(book_count=Count("book"))['book_count']
+#     average_price = Book.objects.aggregate(Avg("price"))["price__avg"]
+#     average_pages = Book.objects.aggregate(Avg("pages"))["pages__avg"]
+#     author_max_age = Author.objects.aggregate(Max("age"))["age__max"]
+#     all_books = Book.objects.annotate(Min("pages")).filter(pages__gte=5)
+#
+#     # author = Author.objects.filter(age__gte=20, age__lte=30)
+#     return render(request, 'templates/index.html', {'total_authors': total_authors,
+#                                                     'average_price': average_price,
+#                                                     'average_pages': average_pages,
+#                                                     'author_max_age': author_max_age,
+#                                                     'all_books': all_books})
 
 
 class AuthorListView(generic.ListView):
@@ -74,10 +100,17 @@ class PublisherDetailView(generic.DetailView):
     template_name = "templates/publisher_detail.html"
 
 
-def get_all_books(request):
-    books_all = Book.objects.order_by("name").prefetch_related()
-    total_books = Book.objects.aggregate(book_count=Count("name"))['book_count']
-    return render(request, 'templates/book_list.html', {'books_all': books_all, 'total_books': total_books})
+class BookListView(generic.ListView):
+    model = Book
+    context_object_name = "book_list"
+    paginate_by = 1000
+    template_name = "templates/book_list.html"
+
+
+# def get_all_books(request):
+#     books_all = Book.objects.order_by("name").prefetch_related()
+#     total_books = Book.objects.aggregate(book_count=Count("name"))['book_count']
+#     return render(request, 'templates/book_list.html', {'books_all': books_all, 'total_books': total_books})
 
 
 def get_book_object(request, book_id):

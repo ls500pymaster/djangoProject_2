@@ -7,13 +7,13 @@
 ### Create fake book
 
 ```bash
-python3 manage.py create_book 100
+python3 manage.py create_book 499
 ```
 
 ### Create fake author
 
 ```bash
-python3 manage.py create_author 100
+python3 manage.py create_author 4999
 ```
 
 ### Create fake user
@@ -152,6 +152,23 @@ Clean queue
 ` celery -A djangoProject_2 purge  
 ` 
 
+### Caching in Django With Redis
+
+Add cache setting to django. 
+
+` Import CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+` 
+
+Use decorator in functions for caching 
+
+` @cache_page(CACHE_TTL)
+` 
+
+For Class Based Views use cache in URLs settings
+
+` path('foo/<int:code>/', cache_page(60 * 15)(my_view)),
+` 
+![Снимок экрана 2023-02-24 в 23.38.52.png](..%2F..%2F..%2F..%2Fvar%2Ffolders%2F7d%2Ffx442mc51d948z5tzz30hw5h0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_GrMevL%2F%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202023-02-24%20%D0%B2%2023.38.52.png)
 
 # Create a regular user 'foo'
 >>> user = User.objects.create_user('foo', 'foo.bar@xxx.com', 'bar')

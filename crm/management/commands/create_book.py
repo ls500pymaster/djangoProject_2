@@ -10,7 +10,7 @@ class Command(BaseCommand):
     help = u'Create random authors, books, publishers'
 
     def add_arguments(self, parser):
-        parser.add_argument('total', type=int, choices=range(2, 500), help=u'Number of users')
+        parser.add_argument('total', type=int, choices=range(2, 5000), help=u'Number of users')
 
     def handle(self, *args, **kwargs):
         total = kwargs['total']

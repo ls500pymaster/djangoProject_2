@@ -8,6 +8,7 @@
         <th>Total Books: {{ total_books }} </th>
       </tr>
     </thead>
+      </table>
     <div class="container">
       <table id="data" class="table table-striped">
     <thead>
@@ -20,7 +21,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for book in books_all %}
+      {% for book in object_list %}
         <tr>
           <td><a href="{{ book.name }}">{{ book.name }}</a></td>
             <td>{{ book.pages }}
@@ -32,5 +33,6 @@
     {% endfor %}
     </tbody>
   </table>
+{% include "templates/pagination.html" with page=page_obj %}
     {% endblock %}
     </div>
