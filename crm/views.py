@@ -30,9 +30,6 @@ class AuthorListView(generic.ListView):
     paginate_by = 20
     template_name = "templates/author_list.html"
 
-    def get_queryset(self):
-        return super(AuthorListView, self).get_queryset()
-
 
 class AuthorDetailView(generic.DetailView):
     model = Author
@@ -40,7 +37,7 @@ class AuthorDetailView(generic.DetailView):
     template_name = "templates/author_detail.html"
 
 
-class AuthorCreate(PermissionRequiredMixin, generic.CreateView):
+class AuthorCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
     model = Author
     fields = ["name", "age"]
     template_name = "templates/author_form.html"
@@ -48,7 +45,7 @@ class AuthorCreate(PermissionRequiredMixin, generic.CreateView):
     success_url = reverse_lazy("crm:author_list")
 
 
-class AuthorUpdate(PermissionRequiredMixin, generic.UpdateView):
+class AuthorUpdate(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView):
     model = Author
     fields = ["name", "age"]
     template_name = "templates/author_form.html"
@@ -56,7 +53,7 @@ class AuthorUpdate(PermissionRequiredMixin, generic.UpdateView):
     success_url = reverse_lazy("crm:author_list")
 
 
-class AuthorDelete(PermissionRequiredMixin, generic.DeleteView):
+class AuthorDelete(LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     model = Author
     template_name = "templates/author_confirm_delete.html"
     permission_required = "catalog.can_mark_returned"
@@ -66,11 +63,8 @@ class AuthorDelete(PermissionRequiredMixin, generic.DeleteView):
 class PublisherListView(generic.ListView):
     model = Publisher
     context_object_name = 'publisher_list'
-    paginate_by = 10
+    paginate_by = 5
     template_name = "templates/publisher_list.html"
-
-    def get_queryset(self):
-        return super(PublisherListView, self).get_queryset()
 
 
 class PublisherDetailView(generic.DetailView):
