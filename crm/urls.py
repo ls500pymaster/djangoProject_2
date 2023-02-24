@@ -1,15 +1,17 @@
-from django.template.defaulttags import url
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
-from . import views
-from django.urls import include, path, re_path
-
-from .views import AuthorListView, AuthorDetailView, PublisherListView, PublisherDetailView, AuthorCreate, AuthorUpdate, AuthorDelete
+from catalog import views
+from django.urls import path
+from crm import views
+from crm.views import AuthorListView, AuthorDetailView, AuthorCreate, AuthorUpdate, AuthorDelete, PublisherListView, \
+    PublisherDetailView, BookListView, IndexView
 
 app_name = 'crm'
 
 urlpatterns = [
-    path('', views.index_crm, name='index_crm'),
+    path('', cache_page(60 * 15)(IndexView.as_view()), name='index_crm'),
+    # path('', IndexView.as_view(), name='index_crm'),
     path('authors/', AuthorListView.as_view(), name='author_list'),
     path("authors/<int:pk>/", AuthorDetailView.as_view(), name="author_detail"),
 
@@ -20,7 +22,8 @@ urlpatterns = [
     path('publishers/', PublisherListView.as_view(), name='publisher_list'),
     path('publishers/<int:pk>/', PublisherDetailView.as_view(), name='publisher_detail'),
 
-    path('books/', views.get_all_books, name='get_all_books'),
+    path('books/', BookListView.as_view(), name='book_list'),
+    # path('books/', views.get_all_books, name='get_all_books'),
     path('books/<book_id>/', views.get_book_object, name='get_book_object'),
 
     path('stores/', views.get_all_stores, name='get_all_stores'),

@@ -1,15 +1,5 @@
 from time import sleep
-from celery import shared_task
-from django.core.mail import send_mail
-from .models import Author, Quotes
-
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
-from time import sleep
-
+from webdriver_auto_update import check_driver
 from celery import shared_task
 from django.core.mail import send_mail
 from selenium import webdriver
@@ -23,12 +13,11 @@ from .models import Author, Quotes
 options = Options()
 # Show or hide browser
 options.headless = True
-
 # disable webrdiver-mode:
 options.add_argument('--disable-blink-features=AutomationControlled')
-# driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
-#                           options=options,
-#                           )
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
+                          options=options,
+                          )
 
 
 @shared_task(name="send_feedback_email")
